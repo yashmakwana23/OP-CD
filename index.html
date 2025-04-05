@@ -187,7 +187,9 @@
 
   <script>
     // Set countdown to 3 minutes and 49 seconds from page load
-    const targetDate = new Date().getTime() + (3 * 60 + 49) * 1000;
+    // Set countdown to 3 hours and 49 minutes from now
+    const targetDate = new Date().getTime() + (3 * 60 + 49) * 60 * 1000;
+
     const quoteBox = document.getElementById("quote");
     const quotes = [
       '"Nothing happened." – Zoro',
