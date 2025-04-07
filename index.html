@@ -28,6 +28,8 @@
       font-family: 'Roboto Mono', monospace;
       color: var(--text-light);
       overflow: hidden;
+      background: url('image.png') no-repeat center center fixed !important;
+      background-size: cover !important;
     }
 
     #video-background {
@@ -35,7 +37,7 @@
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: -2;
+      z-index: 0; /* Ensure it overlays the fallback image */
       overflow: hidden;
     }
 
@@ -58,6 +60,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      z-index: 1; /* Ensure video is visible */
     }
 
     .overlay {
@@ -336,17 +339,39 @@
 
     let currentVideoIndex = 0;
 
-    // Initialize the first video source
-    videoElement.src = videoSources[currentVideoIndex];
-    videoElement.play();
+    async function cacheVideos() {
+      for (const video of videoSources) {
+        if (!localStorage.getItem(video)) {
+          const response = await fetch(video);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          localStorage.setItem(video, url);
+        }
+      }
+    }
 
-    function rotateVideo() {
-      currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
-      videoElement.src = videoSources[currentVideoIndex];
+    async function loadVideo(index) {
+      const cachedVideo = localStorage.getItem(videoSources[index]);
+      if (cachedVideo) {
+        videoElement.src = cachedVideo;
+      } else {
+        videoElement.src = videoSources[index];
+      }
       videoElement.play();
     }
 
-    setInterval(rotateVideo, 30000); // Change video every 30 seconds
+    async function initializeVideos() {
+      await cacheVideos();
+      loadVideo(currentVideoIndex);
+    }
+
+    function rotateVideo() {
+      currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+      loadVideo(currentVideoIndex);
+    }
+
+    initializeVideos();
+    setInterval(rotateVideo, 30000);
 
     function launchFullscreen() {
       const el = document.documentElement;
