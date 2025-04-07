@@ -198,10 +198,7 @@
 
   <div id="video-background">
     <div class="video-wrapper">
-      <video autoplay muted loop playsinline>
-        <source src="video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+      <video autoplay muted loop playsinline></video>
     </div>
   </div>
 
@@ -327,6 +324,39 @@
       const random = Math.floor(Math.random() * quotes.length);
       quoteBox.textContent = quotes[random];
     }, 15000);
+
+    const videoElement = document.querySelector("#video-background video");
+    const videoSources = [
+      "https://motionbgs.com/media/7376/one-piece-boat.960x540.mp4",
+      "https://motionbgs.com/media/3579/fire-fist-ace.960x540.mp4",
+      "https://motionbgs.com/media/4119/kaidou.960x540.mp4",
+      "https://motionbgs.com/media/1112/sunny-pirates-one-piece.960x540.mp4",
+      "https://motionbgs.com/media/6294/yamato-from-one-piece.960x540.mp4",
+      "https://motionbgs.com/media/1970/one-piece-skull.960x540.mp4",
+      "https://motionbgs.com/media/1956/aokiji-from-one-piece.960x540.mp4",
+      "https://motionbgs.com/media/768/one-piece-experience.960x540.mp4",
+      "https://motionbgs.com/media/1250/the-king-of-hell-one-piece.960x540.mp4",
+      "https://motionbgs.com/media/1115/sanji-smoking-one-piece.960x540.mp4",
+      "https://motionbgs.com/media/6080/yamato.960x540.mp4",
+      "https://motionbgs.com/media/6593/boa-hancock.960x540.mp4",
+      "https://motionbgs.com/media/7376/one-piece-boat.960x540.mp4",
+      "https://motionbgs.com/media/5872/straw-hat-pirates.960x540.mp4",
+      "video.mp4" // Local downloaded video
+    ];
+
+    let currentVideoIndex = 0;
+
+    // Initialize the first video source
+    videoElement.src = videoSources[currentVideoIndex];
+    videoElement.play();
+
+    function rotateVideo() {
+      currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+      videoElement.src = videoSources[currentVideoIndex];
+      videoElement.play();
+    }
+
+    setInterval(rotateVideo, 30000); // Change video every 30 seconds
 
     function launchFullscreen() {
       const el = document.documentElement;
