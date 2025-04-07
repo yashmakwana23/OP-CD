@@ -28,7 +28,7 @@
       font-family: 'Roboto Mono', monospace;
       color: var(--text-light);
       overflow: hidden;
-      background: url('image.png') no-repeat center center fixed !important;
+      background: url('image.jpg') no-repeat center center fixed !important;
       background-size: cover !important;
     }
 
@@ -332,38 +332,21 @@
 
     const videoElement = document.querySelector("#video-background video");
     const videoSources = [
-      "main.mp4",
-      "boa.mp4",
-      "sunnyboat.mp4",
-      "yamato.mp4",
-      "boat.mp4",
+      "https://motionbgs.com/media/1977/luffy-one-pieces-chaotic-force.960x540.mp4",
+      // "boa.mp4",
+      // "sunnyboat.mp4",
+      // "yamato.mp4",
+      // "boat.mp4",
     ];
 
     let currentVideoIndex = 0;
 
-    async function cacheVideos() {
-      for (const video of videoSources) {
-        if (!localStorage.getItem(video)) {
-          const response = await fetch(video);
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          localStorage.setItem(video, url);
-        }
-      }
-    }
-
     async function loadVideo(index) {
-      const cachedVideo = localStorage.getItem(videoSources[index]);
-      if (cachedVideo) {
-        videoElement.src = cachedVideo;
-      } else {
-        videoElement.src = videoSources[index];
-      }
+      videoElement.src = videoSources[index];
       videoElement.play();
     }
 
     async function initializeVideos() {
-      await cacheVideos();
       loadVideo(currentVideoIndex);
     }
 
