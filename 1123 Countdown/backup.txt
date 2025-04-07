@@ -17,11 +17,13 @@
       --bg-dark: rgba(0, 0, 0, 0.7);
     }
 
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
 
     body, html {
       height: 100%;
@@ -80,7 +82,7 @@
 
     h1 {
       font-family: 'Bangers', cursive;
-      font-size: 3em;
+      font-size: 6em; /* Increased from 3em to 4em */
       text-shadow: 2px 2px 4px #000;
       margin-bottom: 30px;
     }
@@ -90,7 +92,13 @@
       font-size: 1.2em;
       animation: pulseGlow 2s infinite;
     }
+    .highlight-episode {
+      color: var(--highlight);
+      font-size: 1.2em;
+      animation: pulseGlow 2s infinite;
+    }
     .countdown {
+      position: relative;
       position: relative;
       display: flex;
       gap: 20px;
@@ -112,12 +120,18 @@
     }
 
 
+
     .box {
       background: var(--bg-dark);
       border: 2px solid #ecc2ff;
       border-radius: 10px;
-      padding: 15px 0px;
-      width: 80px;
+      padding: 20px 0;
+      width: 180px; /* Increased width */
+      height: 200px; /* Increased height */
+      display: flex; /* Center align text */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       animation: floatBox 2.5s ease-in-out infinite;
     }
 
@@ -126,13 +140,13 @@
     .box:nth-child(4) { animation-delay: 0.6s; }
 
     .number {
-      font-size: 2.4em;
+      font-size: 5em; /* Increased from 2.4em to 3em */
       font-weight: bold;
       animation: fadeInUp 1s ease-in-out;
     }
 
     .label {
-      font-size: 0.85em;
+      font-size: 1.5em;
       margin-top: 5px;
     }
 
@@ -178,6 +192,23 @@
       100% { left: 100%; }
     }
 
+    @keyframes pulseGlow {
+      0% {
+        text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
+      }
+      50% {
+        text-shadow: 0 0 10px #000000, 0 0 20px #000000, 0 0 30px #000000;
+      }
+      /* 100% {
+        text-shadow: 0 0 5px #9553ff, 0 0 10px #9553ff, 0 0 15px #9553ff;
+      } */
+    }
+    @keyframes lineSweep {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
     .fullscreen-button {
       position: absolute;
       top: 10px;
@@ -189,6 +220,61 @@
       color: white;
       border-radius: 5px;
       font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5em; /* Adjust heading size for smaller screens */
+      }
+
+      .number {
+        font-size: 2em; /* Adjust countdown number size */
+      }
+
+      .box {
+        width: 60px; /* Reduce box width */
+        padding: 10px 0;
+      }
+
+      .countdown {
+        gap: 10px; /* Reduce gap between boxes */
+      }
+
+      .quote {
+        font-size: 0.9em; /* Adjust quote size */
+      }
+
+      .footer {
+        font-size: 0.8em; /* Adjust footer size */
+      }
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      h1 {
+        font-size: 2em; /* Reduce header size for landscape mode */
+        margin-bottom: 20px;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .countdown {
+        gap: 5px; /* Reduce gap between boxes */
+      }
+
+      .box {
+        width: 50px; /* Further reduce box size */
+        height: 70px;
+      }
+
+      .number {
+        font-size: 1.5em; /* Adjust number size */
+      }
+
+      .quote {
+        font-size: 0.8em; /* Adjust quote size */
+      }
     }
   </style>
 </head>
@@ -208,6 +294,8 @@
   <div class="overlay"></div>
 
   <div class="container">
+    <h1>Countdown to One Piece Episode <span class="highlight-episode">1125</span></h1>
+    <div class="countdown" id="countdown-box">
     <h1>Countdown to One Piece Episode <span class="highlight-episode">1125</span></h1>
     <div class="countdown" id="countdown-box">
       <div class="box"><div class="number" id="days">0</div><div class="label">Days</div></div>
@@ -266,9 +354,58 @@
     const secondsElement = document.getElementById("seconds");
     const countdownBox = document.getElementById("countdown-box");
 
+    // Countdown timer setup
+    const now = new Date();
+    const targetDate = new Date();
+
+    // Calculate the number of days until the next Sunday
+    const daysUntilSunday = (7 - now.getDay()) % 7;
+    targetDate.setDate(now.getDate() + daysUntilSunday);
+
+    // Set the time to 9:30 PM
+    targetDate.setHours(21, 30, 0, 0);
+
+    const daysElement = document.getElementById("days");
+    const hoursElement = document.getElementById("hours");
+    const minutesElement = document.getElementById("minutes");
+    const secondsElement = document.getElementById("seconds");
+    const countdownBox = document.getElementById("countdown-box");
+
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
+
+      if (distance <= 0) {
+        countdownBox.innerHTML = `
+          <div style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--highlight);
+            padding: 15px 20px;
+            border-radius: 15px;
+            max-width: 700px;
+            margin: auto;
+            font-size: 1.1em;
+            animation: fadeInUp 0.8s ease-out;
+          ">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord Icon" style="width: 50px; margin-bottom: 10px;" />
+            <div style="font-weight: bold; font-size: 1.4em; margin-bottom: 10px;">
+              🎉 The Episode is Now Live!
+            </div>
+            <div style="margin-bottom: 8px;">
+              🔗 <strong><a href="https://discord.gg/YOUR_SERVER" target="_blank" style="color: var(--highlight); text-decoration: underline;">Join our Discord</a></strong> to watch it.
+            </div>
+            <div style="opacity: 1;">
+              📌 Check the <strong>description</strong> or <strong>pinned message</strong> for the link.
+            </div>
+          </div>
+        `;
+        quoteBox.textContent = '';
+        return;
+      }
+
 
       if (distance <= 0) {
         countdownBox.innerHTML = `
@@ -306,6 +443,15 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+      daysElement.textContent = days;
+      hoursElement.textContent = hours;
+      minutesElement.textContent = minutes;
+      secondsElement.textContent = seconds;
+
+      requestAnimationFrame(updateCountdown); // Call update again before the next repaint
+    }
+
+    updateCountdown(); // Start the countdown loop
       daysElement.textContent = days;
       hoursElement.textContent = hours;
       minutesElement.textContent = minutes;
