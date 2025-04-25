@@ -1,369 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>One Piece Countdown</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>One Piece Episode Countdown - Pirate Theme</title>
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
 
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto+Mono&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --highlight: #ff1818;
-      --text-light: #fff;
-      --bg-dark: rgba(0, 0, 0, 0.7);
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Include Original Fonts + New Pirate Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;700;900&family=Pirata+One&display=swap" rel="stylesheet">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <link rel="stylesheet" href="style.css">
 
-    body, html {
-      height: 100%;
-      font-family: 'Roboto Mono', monospace;
-      color: var(--text-light);
-      overflow: hidden;
-      background: url('image.jpg') no-repeat center center fixed !important;
-      background-size: cover !important;
-    }
-
-    #video-background {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0; /* Ensure it overlays the fallback image */
-      overflow: hidden;
-    }
-
-    .video-wrapper {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 177.77vh;
-      height: 100vh;
-      transform: translate(-50%, -50%);
-    }
-
-    @media (min-aspect-ratio: 16/9) {
-      .video-wrapper {
-        width: 100vw;
-        height: 56.25vw;
-      }
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1; /* Ensure video is visible */
-    }
-
-    .overlay {
-      background-color: var(--bg-dark);
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
-    }
-
-    .container {
-      text-align: center;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative; /* Ensure it is above the video and overlay */
-      z-index: 2; /* Higher than the video and overlay */
-    }
-
-    h1 {
-      font-family: 'Bangers', cursive;
-      font-size: 3em;
-      text-shadow: 2px 2px 4px #000;
-      margin-bottom: 30px;
-    }
-
-    .highlight-episode {
-      color: var(--highlight);
-      font-size: 1.2em;
-      animation: pulseGlow 2s infinite;
-    }
-    .countdown {
-      position: relative;
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 15px;
-      overflow: hidden;
-    }
-
-    .countdown::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
-      animation: lineSweep 30s infinite;
-    }
-
-
-    .box {
-      background: var(--bg-dark);
-      border: 2px solid #ecc2ff;
-      border-radius: 10px;
-      padding: 15px 0px;
-      width: 80px;
-      animation: floatBox 2.5s ease-in-out infinite;
-    }
-
-    .box:nth-child(2) { animation-delay: 0.2s; }
-    .box:nth-child(3) { animation-delay: 0.4s; }
-    .box:nth-child(4) { animation-delay: 0.6s; }
-
-    .number {
-      font-size: 2.4em;
-      font-weight: bold;
-      animation: fadeInUp 1s ease-in-out;
-    }
-
-    .label {
-      font-size: 0.85em;
-      margin-top: 5px;
-    }
-
-    .quote {
-      font-style: italic;
-      font-size: 1.1em;
-      margin-top: 15px;
-    }
-
-    .footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9em;
-      opacity: 0.8;
-    }
-
-    @keyframes floatBox {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulseGlow {
-      0% {
-        text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
-      }
-      50% {
-        text-shadow: 0 0 10px #000000, 0 0 20px #000000, 0 0 30px #000000;
-      }
-      /* 100% {
-        text-shadow: 0 0 5px #9553ff, 0 0 10px #9553ff, 0 0 15px #9553ff;
-      } */
-    }
-    @keyframes lineSweep {
-      0% { left: -100%; }
-      50% { left: 100%; }
-      100% { left: 100%; }
-    }
-
-    .fullscreen-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      padding: 8px 16px;
-      border: none;
-      background: #ffffff00;
-      color: white;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-  </style>
 </head>
 <body>
+    <div class="quiz-container">
 
-  <button class="fullscreen-button" onclick="launchFullscreen()">Full</button>
+        <!-- Particle Background -->
+        <div id="particles-js"></div>
 
-  <div id="video-background">
-    <div class="video-wrapper">
-      <video autoplay muted loop playsinline></video>
-    </div>
-  </div>
+        <!-- Background Layer -->
+        <div class="background-layer">
+             <!-- Optional: Replace grid with a subtle texture like wood or ocean -->
+            <!-- <img src="images/dark-wood-bg.png" alt="Background Texture" class="background-img"> -->
+            <div class="overlay"></div> <!-- Keep overlay for darkening -->
+        </div>
 
-  <div class="overlay"></div>
+        <!-- Dropping Items Container -->
+        <div id="dropping-items-container"></div>
 
-  <div class="container">
-    <h1>Countdown to One Piece Episode <span class="highlight-episode">1125</span></h1>
-    <div class="countdown" id="countdown-box">
-      <div class="box"><div class="number" id="days">0</div><div class="label">Days</div></div>
-      <div class="box"><div class="number" id="hours">0</div><div class="label">Hours</div></div>
-      <div class="box"><div class="number" id="minutes">0</div><div class="label">Minutes</div></div>
-      <div class="box"><div class="number" id="seconds">0</div><div class="label">Seconds</div></div>
-    </div>
-    <div class="quote" id="quote">"Nothing happened." – Zoro</div>
-  </div>
+        <!-- Decorative Elements Layer (UPDATE IMAGE PATHS!) -->
+        <div class="decor-layer">
+             <img src="images/decor/skull.png" class="decor-item decor-1" alt=""> <!-- Example Path -->
+             <img src="images/decor/anchor.png" class="decor-item decor-2" alt=""> <!-- Example Path -->
+             <img src="images/decor/crossed-swords.png" class="decor-item decor-3" alt=""> <!-- Example Path -->
+             <img src="images/decor/compass-rose.png" class="decor-item decor-4" alt=""> <!-- Example Path -->
+        </div>
 
-  <div class="footer">
-    📺 The countdown follows Crunchyroll's release time, which comes shortly after Japan.
-  </div>
+         <!-- Logo -->
+        <div class="logo-container">
+            <img src="images/one-piece-logo.png" alt="One Piece Logo" class="logo-image">
+        </div>
 
-  <script>
-    const quoteBox = document.getElementById("quote");
-    const quotes = [
-      '"Nothing happened." – Zoro',
-      '"I want to live!" – Robin',
-      '"It’s not about whether it’s possible or not." – Luffy',
-      '"A scar on the back is a swordsman’s shame." – Zoro',
-      '"A man forgives a woman’s lies." – Sanji',
-      '"Don’t ever think there’s any perfect society made by humans!" – Robin',
-      '"When do you think people die? When they are shot with a bullet? No!" – Dr. Hiluluk',
-      '"Being alone is more painful than getting hurt." – Luffy',
-      '"Power isn’t determined by your size, but the size of your heart." – Luffy',
-      '"Miracles only happen to those who never give up." – Ivankov',
-      '"If you don’t take risks, you can’t create a future!" – Luffy',
-      '"Only those who have suffered long, can see the light within the shadows." – Zoro',
-      '"I’ve set myself to become the King of the Pirates… and if I die trying… then at least I tried!" – Luffy',
-      '"Fool who doesn’t fear the sea is bound to get swallowed by it." – Jinbei',
-      '"I’m not gonna run away, I never go back on my word!" – Luffy',
-      '"No matter how deep the night, it always turns to day, eventually." – Brook',
-      '"Living is a pain in the ass... but it’s not bad." – Trafalgar Law',
-      '"Weather is no problem when you have friends to sail with!" – Nami',
-      '"Being weak isn’t something to be ashamed of... staying weak is." – Usopp',
-      '"I don’t care if I die. I’d rather die trying to live!" – Nami',
-      '"Let’s live so we have no regrets!" – Franky',
-      '"Men who can’t wipe away the tears of a woman aren’t real men." – Sanji',
-      '"The world is waiting for our answer." – Gol D. Roger',
-      '"Justice will prevail, you say? But of course it will! Whoever wins this war becomes justice!" – Doflamingo',
-      '"Stop counting only those things you have lost! What is gone, is gone!" – Jinbei',
-      '"I don’t want to conquer anything. I just think the guy with the most freedom in this whole ocean… is the Pirate King!" – Luffy',
-      '"You can’t bring back what you’ve lost, think about what you have now!" – Jinbei',
-      '"I am going to save this country!" – Vivi',
-      '"I’ll die smiling! Because if you ever think of me in the future, I want you to remember me smiling!" – Donquixote Rosinante'
-    ];
+        <!-- Character Switchers -->
+        <div id="left-character-switcher" class="character-switcher">
+            <img id="left-char-img" src="" alt="Character">
+        </div>
+        <div id="right-character-switcher" class="character-switcher">
+             <img id="right-char-img" src="" alt="Character">
+        </div>
 
-    // Countdown timer setup
-    const now = new Date();
-    const targetDate = new Date();
 
-    // Calculate the number of days until the next Sunday
-    const daysUntilSunday = (7 - now.getDay()) % 7;
-    targetDate.setDate(now.getDate() + daysUntilSunday);
-
-    // Set the time to 9:30 PM
-    targetDate.setHours(21, 30, 0, 0);
-
-    const daysElement = document.getElementById("days");
-    const hoursElement = document.getElementById("hours");
-    const minutesElement = document.getElementById("minutes");
-    const secondsElement = document.getElementById("seconds");
-    const countdownBox = document.getElementById("countdown-box");
-
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance <= 0) {
-        countdownBox.innerHTML = `
-          <div style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: rgba(0,0,0,0.6);
-            border: 2px solid var(--highlight);
-            padding: 15px 20px;
-            border-radius: 15px;
-            max-width: 700px;
-            margin: auto;
-            font-size: 1.1em;
-            animation: fadeInUp 0.8s ease-out;
-          ">
-            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord Icon" style="width: 50px; margin-bottom: 10px;" />
-            <div style="font-weight: bold; font-size: 1.4em; margin-bottom: 10px;">
-              🎉 The Episode is Now Live!
+        <!-- Main Content Area -->
+        <div class="content-layer">
+           <!-- ... (Rest of the content-layer HTML remains the same) ... -->
+            <div class="title-container">
+                 <span class="title-its">EPISODE</span>
+                 <h1 class="title-quiz-time">COUNTDOWN</h1>
+                 <span class="highlight-episode-themed">1126</span> <!-- Replace -->
             </div>
-            <div style="margin-bottom: 8px;">
-              🔗 <strong><a href="https://discord.gg/YOUR_SERVER" target="_blank" style="color: var(--highlight); text-decoration: underline;">Join our Discord</a></strong> to watch it.
+            <div class="countdown-area">
+                <div id="raw-countdown-section" class="countdown-section raw-theme">
+                    <h2 class="countdown-title-themed raw-title">
+                        <span class="countdown-logo"><img src="images/logos/fuji-tv.png" alt="Fuji TV"></span>
+                        <span class="countdown-main-title">Fuji TV</span>
+                        <span class="countdown-sub-title">9:30 AM JST | Raw Episode</span>
+                    </h2>
+                    <div class="countdown-boxes" id="raw-countdown-box"></div>
+                </div>
+                <div id="sub-countdown-section" class="countdown-section sub-theme">
+                     <h2 class="countdown-title-themed sub-title">
+                        <span class="countdown-logo"><img src="images/logos/crunchyroll.png" alt="Crunchyroll"></span>
+                        <span class="countdown-main-title">Crunchyroll</span>
+                        <span class="countdown-sub-title">~11:00 AM JST | English Sub</span>
+                    </h2>
+                    <div class="countdown-boxes" id="sub-countdown-box"></div>
+                </div>
             </div>
-            <div style="opacity: 1;">
-              📌 Check the <strong>description</strong> or <strong>pinned message</strong> for the link.
-            </div>
-          </div>
-        `;
-        quoteBox.textContent = '';
-        return;
-      }
+        </div>
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        <!-- Crew Image Layer -->
+        <div class="crew-image-container">
+             <img src="images/one-piece-crew.png" alt="Crew Image" class="crew-image">
+        </div>
 
-      daysElement.textContent = days;
-      hoursElement.textContent = hours;
-      minutesElement.textContent = minutes;
-      secondsElement.textContent = seconds;
+        <!-- Fullscreen Button -->
+        <button class="fullscreen-button" id="fullscreen-btn">FS</button>
 
-      requestAnimationFrame(updateCountdown); // Call update again before the next repaint
-    }
+        <!-- Bottom Discord Message Bar -->
+         <div id="bottom-discord-message" class="bottom-discord-bar">
+              <span>Join Discord (Type !dc in chat) 👉 <a href="https://discord.gg/YOUR_SERVER" target="_blank">Click Here</a></span>
+         </div>
 
-    updateCountdown(); // Start the countdown loop
+         <!-- Discord Overlay (Initially Hidden) -->
+         <div id="discord-overlay">
+             <div class="overlay-content">
+                 <h2 class="overlay-title">Episodes Are Out!</h2>
+                 <p>Join the Discord server! Type <span class="highlight-command">!dc</span> in chat for the link, or click below.</p>
+                 <a href="https://discord.gg/YOUR_SERVER" target="_blank" class="overlay-button">Join Discord Now!</a>
+             </div>
+         </div>
 
-    setInterval(() => {
-      const random = Math.floor(Math.random() * quotes.length);
-      quoteBox.textContent = quotes[random];
-    }, 15000);
+    </div><!-- End of quiz-container -->
 
-    const videoElement = document.querySelector("#video-background video");
-    const videoSources = [
-      "https://motionbgs.com/media/1977/luffy-one-pieces-chaotic-force.960x540.mp4",
-      // "boa.mp4",
-      // "sunnyboat.mp4",
-      // "yamato.mp4",
-      // "boat.mp4",
-    ];
+    <!-- particles.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-    let currentVideoIndex = 0;
+    <!-- Main JS (No changes needed from previous version) -->
+    <script>
+        // --- Countdown Timer Setup ---
+        const nowMs = new Date().getTime();
+        const targetDateRaw = new Date(nowMs + 70 * 1000); // 7 seconds
+        const targetDateSub = new Date(nowMs + 140 * 1000); // 14 seconds
+        console.log("[Setup] Target Raw:", targetDateRaw.toLocaleTimeString());
+        console.log("[Setup] Target Sub:", targetDateSub.toLocaleTimeString());
 
-    async function loadVideo(index) {
-      videoElement.src = videoSources[index];
-      videoElement.play();
-    }
+        // --- DOM Element References ---
+        const rawCountdownSection = document.getElementById('raw-countdown-section');
+        const subCountdownSection = document.getElementById('sub-countdown-section');
+        const rawCountdownBox = document.getElementById("raw-countdown-box");
+        const subCountdownBox = document.getElementById("sub-countdown-box");
+        const bottomDiscordMessage = document.getElementById("bottom-discord-message");
+        const fullscreenButton = document.getElementById("fullscreen-btn");
+        const discordOverlay = document.getElementById('discord-overlay');
+        const leftCharImg = document.getElementById('left-char-img');
+        const rightCharImg = document.getElementById('right-char-img');
+        const particlesContainer = document.getElementById('particles-js');
+        const droppingItemsContainer = document.getElementById('dropping-items-container');
 
-    async function initializeVideos() {
-      loadVideo(currentVideoIndex);
-    }
+        let timeElements = { raw: {}, sub: {} };
 
-    function rotateVideo() {
-      currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
-      loadVideo(currentVideoIndex);
-    }
+        const initialCountdownHTML = `
+            <div class="box"><span class="number" id="{type}-days">?</span><span class="label">Days</span></div>
+            <div class="box"><span class="number" id="{type}-hours">??</span><span class="label">Hours</span></div>
+            <div class="box"><span class="number" id="{type}-minutes">??</span><span class="label">Mins</span></div>
+            <div class="box"><span class="number" id="{type}-seconds">??</span><span class="label">Secs</span></div>`;
 
-    initializeVideos();
-    setInterval(rotateVideo, 30000);
+        let countdownInterval = null;
+        let currentState = 0;
 
-    function launchFullscreen() {
-      const el = document.documentElement;
-      if (el.requestFullscreen) el.requestFullscreen();
-      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-      else if (el.msRequestFullscreen) el.msRequestFullscreen();
-    }
-  </script>
+        // --- Character Switcher & Dropping Items Image Setup ---
+        const characterImages = [ /* ... Keep your list ... */
+
+        ];
+        const droppingItemImages = [ /* ... Keep your list ... */
+            "images/items/10325-zoro-king.png", "images/items/in1.png","images/items/in2.png",
+        ];
+
+        let leftCharIndex = -1;
+        let rightCharIndex = Math.floor(characterImages.length / 2) -1;
+        let leftInterval, rightInterval, dropInterval;
+        const switchIntervalTime = 7000;
+        const dropIntervalTime = 1500;
+
+        // --- Functions (Keep existing: swapCharacter, startCharacterSwitcher, updateTimeElements, createLiveMessage, updateCountdown, launchFullscreen) ---
+        function swapCharacter(side) { /* ... Keep existing ... */
+            const imgElement = (side === 'left') ? leftCharImg : rightCharImg; if (!imgElement) return; let currentIndex = (side === 'left') ? leftCharIndex : rightCharIndex; let otherIndex = (side === 'left') ? rightCharIndex : leftCharIndex; let attempts = 0; do { currentIndex = (currentIndex + 1) % characterImages.length; attempts++; } while (characterImages.length > 1 && currentIndex === otherIndex && attempts < characterImages.length); const nextImageSrc = characterImages[currentIndex]; imgElement.classList.remove('visible'); setTimeout(() => { imgElement.src = nextImageSrc; imgElement.alt = nextImageSrc.split('/').pop().split('.')[0]; imgElement.onload = () => { imgElement.classList.add('visible'); if (side === 'left') { leftCharIndex = currentIndex; } else { rightCharIndex = currentIndex; } }; imgElement.onerror = () => { console.error(`Error loading image for ${side}: ${nextImageSrc}`); }; if (!imgElement.classList.contains('visible') && imgElement.complete) { imgElement.classList.add('visible'); } }, 500);
+        }
+        function startCharacterSwitcher() { /* ... Keep existing ... */
+            if (characterImages.length === 0 || !leftCharImg || !rightCharImg) return; swapCharacter('left'); setTimeout(() => swapCharacter('right'), 1000); leftInterval = setInterval(() => swapCharacter('left'), switchIntervalTime); rightInterval = setInterval(() => swapCharacter('right'), switchIntervalTime); console.log("Character Switcher Started");
+        }
+        function updateTimeElements(elements, distance) { /* ... Keep existing ... */
+            if (!elements || !elements.days || !elements.hours || !elements.minutes || !elements.seconds) return; if (distance > 0) { elements.days.textContent = Math.floor(distance / (1000 * 60 * 60 * 24)); elements.hours.textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2,'0'); elements.minutes.textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2,'0'); elements.seconds.textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2,'0'); } else { elements.days.textContent = '0'; elements.hours.textContent = '00'; elements.minutes.textContent = '00'; elements.seconds.textContent = '00'; }
+        }
+        function createLiveMessage(type) { /* ... Keep existing ... */
+             const isRaw = type === 'raw'; const title = isRaw ? "RAW IS LIVE!" : "SUB IS LIVE!"; const messageClass = "live-message-themed"; return `<div class="${messageClass}">🏴‍☠️ ${title} 🏴‍☠️ Check Discord!</div>`; // Added pirate flags
+        }
+        function updateCountdown() { /* ... Keep existing ... */
+             const currentTime = new Date().getTime(); const distanceRaw = targetDateRaw - currentTime; const distanceSub = targetDateSub - currentTime; const rawIsLive = distanceRaw <= 0; const subIsLive = distanceSub <= 0; let nextState = 0; if (!rawIsLive && !subIsLive) nextState = 1; else if (rawIsLive && !subIsLive) nextState = 2; else if (rawIsLive && subIsLive) nextState = 3; if (nextState !== currentState) { console.log(`State Change: ${currentState} -> ${nextState}`); rawCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished'); subCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished'); discordOverlay.classList.remove('show'); if (nextState === 1) { rawCountdownSection.classList.add('primary-focus'); subCountdownSection.classList.add('secondary-focus'); bottomDiscordMessage.classList.remove('highlight'); if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") }; timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; } else if (nextState === 2) { rawCountdownSection.classList.add('secondary-focus'); subCountdownSection.classList.add('primary-focus'); bottomDiscordMessage.classList.add('highlight'); if (!rawCountdownBox.querySelector('.live-message-themed')) rawCountdownBox.innerHTML = createLiveMessage('raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; } else if (nextState === 3) { rawCountdownSection.classList.add('secondary-focus', 'countdown-finished'); subCountdownSection.classList.add('secondary-focus', 'countdown-finished'); bottomDiscordMessage.classList.add('highlight'); if (!rawCountdownBox.querySelector('.live-message-themed')) rawCountdownBox.innerHTML = createLiveMessage('raw'); if (!subCountdownBox.querySelector('.live-message-themed')) subCountdownBox.innerHTML = createLiveMessage('sub'); discordOverlay.classList.add('show'); } currentState = nextState; } if (currentState === 1) { updateTimeElements(timeElements.raw, distanceRaw); updateTimeElements(timeElements.sub, distanceSub); } else if (currentState === 2) { updateTimeElements(timeElements.sub, distanceSub); } if (currentState === 3) { if (countdownInterval) { cancelAnimationFrame(countdownInterval); countdownInterval = null; console.log("Loop stopped."); clearInterval(dropInterval); console.log("Dropping items stopped.");} return; } if (countdownInterval !== null) { countdownInterval = requestAnimationFrame(updateCountdown); }
+        }
+        function launchFullscreen() { /* ... Keep existing ... */
+             if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) { const docEl = document.documentElement; if (docEl.requestFullscreen) docEl.requestFullscreen(); else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen(); else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen(); else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); } else { if (document.exitFullscreen) document.exitFullscreen(); else if (document.msExitFullscreen) document.msExitFullscreen(); else if (document.mozCancelFullScreen) document.mozCancelFullScreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); }
+        }
+        function createDroppingItem() { /* ... Keep existing ... */
+            if (droppingItemImages.length === 0 || !droppingItemsContainer) return; const item = document.createElement('img'); const randomIndex = Math.floor(Math.random() * droppingItemImages.length); const randomX = Math.random() * 95; const randomDuration = Math.random() * 3 + 4; const randomDelay = Math.random() * 1; item.src = droppingItemImages[randomIndex]; item.alt = "dropping item"; item.classList.add('dropping-item'); item.style.left = `${randomX}%`; item.style.animationDuration = `${randomDuration}s`; item.style.animationDelay = `${randomDelay}s`; item.addEventListener('animationend', () => { item.remove(); }); droppingItemsContainer.appendChild(item);
+        }
+        function initializeCountdown() { /* ... Keep existing setup, particles init, and start logic ... */
+             console.log("DOM Loaded. Initializing countdown..."); const now = new Date().getTime(); if (!(targetDateRaw instanceof Date) || isNaN(targetDateRaw) || !(targetDateSub instanceof Date) || isNaN(targetDateSub)) { console.error("Initialization Error: Invalid target dates provided."); rawCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; subCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; return; } if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") }; timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; if(fullscreenButton) fullscreenButton.addEventListener('click', launchFullscreen); if (typeof particlesJS !== 'undefined') { particlesJS('particles-js', { /* ... Keep particle config ... */ "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true, "anim": { "enable": true, "speed": 0.4, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": false } }, "line_linked": { "enable": false }, "move": { "enable": true, "speed": 0.8, "direction": "bottom-left", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false } } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true } }, "retina_detect": true }); console.log("Particles Initialized."); } else { console.error("particles.js library not found."); } console.log("Starting countdown loop..."); currentState = 0; updateCountdown(); if (currentState !== 3) { countdownInterval = requestAnimationFrame(updateCountdown); } setTimeout(startCharacterSwitcher, 1500); if (droppingItemImages.length > 0) { dropInterval = setInterval(createDroppingItem, dropIntervalTime); console.log("Dropping items started."); } else { console.warn("No images defined for dropping items."); }
+        }
+        document.addEventListener('DOMContentLoaded', initializeCountdown);
+    </script>
+
 </body>
 </html>
