@@ -109,10 +109,32 @@ a:hover { text-decoration: underline; }
 .character-switcher img.visible { opacity: 1; animation: characterPop 0.6s ease-out forwards; }
 
 /* --- Main Content Area --- */
-.content-layer { position: relative; z-index: 5; padding: 1vh 3vw; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2.5vh; width: calc(100% - (2 * var(--char-switcher-width)) - 8vw); max-width: 800px; margin: 0 auto; padding-top: max(10vh, 80px); padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 2vh); /* NO SCROLLBAR: removed overflow-y */ }
+.content-layer { 
+    position: relative; 
+    z-index: 5; 
+    padding: 1vh 3vw;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start; 
+    gap: 1.5vh; /* Reduced gap */
+    width: calc(100% - (2 * var(--char-switcher-width)) - 8vw); 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding-top: max(3vh, 25px); /* Reduced top padding further */
+    padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 2vh);
+}
 
 /* --- Title (Animated) --- */
-.title-container { position: relative; width: 100%; text-align: center; z-index: 10; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s backwards; margin-bottom: 1vh; }
+.title-container { 
+    position: relative; 
+    width: 100%; 
+    text-align: center; 
+    z-index: 10; 
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s backwards; 
+    margin-top: -1vh; /* Added negative margin to move up */
+    margin-bottom: 0.3vh; /* Reduced bottom margin */
+}
 /* Updated "EPISODE" Box Theme */
 .title-its {
     display: inline-block;
@@ -126,7 +148,7 @@ a:hover { text-decoration: underline; }
     text-shadow: none;
     border: 2px solid var(--wood-border); /* Wood border */
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Inner shadow */
-    margin-bottom: -0.8vh;
+    margin-bottom: -1vh; /* Increased negative margin */
     position: relative; z-index: 2;
     animation: titleItsBounce 1.5s ease-out 1s;
     
@@ -152,7 +174,14 @@ a:hover { text-decoration: underline; }
 }
 
 /* --- Countdown Area --- */
-.countdown-area { display: flex; flex-direction: column; align-items: center; gap: 2vh; width: 100%; }
+.countdown-area { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 1.5vh; /* Reduced gap */
+    width: 100%; 
+    margin-top: 1vh; /* Added small margin top */
+}
 
 /* --- Countdown Section --- */
 .countdown-section {
@@ -388,4 +417,19 @@ a:hover { text-decoration: underline; }
 /* --- Media Queries --- */
 @media (max-width: 900px) { .character-switcher { width: clamp(80px, 12vw, 150px); } .content-layer { width: calc(100% - (2 * clamp(80px, 12vw, 150px)) - 6vw); } }
 @media (max-width: 700px) { .countdown-title-themed { white-space: normal; justify-content: flex-start; } .countdown-sub-title { text-align: left; } }
-@media (max-width: 600px) { :root { --font-size-title-main: 40px; --font-size-countdown-title: 18px; --font-size-number: 22px; --crew-image-height-vh: 35vh; --bottom-bar-height: 6vh; --font-size-overlay-title: 28px; --font-size-overlay-text: 14px;} .countdown-area { width: 100%; gap: 1.5vh; } .countdown-boxes { gap: 8px; } .box { flex-basis: clamp(60px, 18vw, 75px); min-height: 55px; } .content-layer { width: 95%; padding-top: max(8vh, 60px); padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 1vh); } .logo-image { width: clamp(100px, 25vw, 150px); } .title-quiz-time { white-space: normal; } .bottom-discord-bar { font-size: 11px; } .overlay-button { padding: 10px 20px; } .character-switcher { display: none; } }
+@media (max-width: 600px) { 
+    :root { --font-size-title-main: 40px; --font-size-countdown-title: 18px; --font-size-number: 22px; --crew-image-height-vh: 35vh; --bottom-bar-height: 6vh; --font-size-overlay-title: 28px; --font-size-overlay-text: 14px;} 
+    .countdown-area { width: 100%; gap: 1.5vh; } 
+    .countdown-boxes { gap: 8px; } 
+    .box { flex-basis: clamp(60px, 18vw, 75px); min-height: 55px; } 
+    .content-layer { 
+        padding-top: max(4vh, 30px); /* Further reduced for mobile */
+        width: 95%; 
+        gap: 1vh; /* Even smaller gap for mobile */
+    } 
+    .logo-image { width: clamp(100px, 25vw, 150px); } 
+    .title-quiz-time { white-space: normal; } 
+    .bottom-discord-bar { font-size: 11px; } 
+    .overlay-button { padding: 10px 20px; } 
+    .character-switcher { display: none; } 
+}
