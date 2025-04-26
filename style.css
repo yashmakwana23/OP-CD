@@ -34,6 +34,8 @@
     --parchment-bg: #f5e8c8; /* Parchment for countdown containers */
     --wood-border: #6f4f28; /* Wood color for borders */
     --button-text-color: var(--text-color-dark); /* Dark text for buttons */
+    --finished-stage2-bg: #7f8c8d; /* Grey for stage 2 finished */
+    --finished-stage2-border: #596163; /* Darker grey border */
 
 
     /* Focus Control */
@@ -41,7 +43,7 @@
     --secondary-opacity: 0.6; /* Slightly less fade */
     --primary-scale: 1.0;
     --secondary-scale: 0.8; /* Slightly less shrink */
-    --finished-opacity: 0.5; /* Less faded when finished */
+    --finished-opacity: 0.5; /* Opacity for stage 1 finished */
 
     /* Fonts */
     --title-font: "Pirata One", cursive; /* NEW Pirate Font */
@@ -58,6 +60,8 @@
     --font-size-label: clamp(10px, 1.6vh, 13px);
     --font-size-overlay-title: clamp(35px, 6vh, 55px); /* Larger overlay title */
     --font-size-overlay-text: clamp(16px, 2.5vh, 22px);
+    --font-size-live-msg-stage1: clamp(16px, 2.5vw, 20px);
+    --font-size-live-msg-stage2: clamp(14px, 2.2vw, 18px);
 
     /* Layout */
     --crew-image-height-vh: 40vh;
@@ -105,7 +109,7 @@ a:hover { text-decoration: underline; }
 .character-switcher img.visible { opacity: 1; animation: characterPop 0.6s ease-out forwards; }
 
 /* --- Main Content Area --- */
-.content-layer { position: relative; z-index: 5; padding: 1vh 3vw; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2.5vh; width: calc(100% - (2 * var(--char-switcher-width)) - 8vw); max-width: 800px; margin: 0 auto; padding-top: max(10vh, 80px); padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 2vh); }
+.content-layer { position: relative; z-index: 5; padding: 1vh 3vw; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2.5vh; width: calc(100% - (2 * var(--char-switcher-width)) - 8vw); max-width: 800px; margin: 0 auto; padding-top: max(10vh, 80px); padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 2vh); /* NO SCROLLBAR: removed overflow-y */ }
 
 /* --- Title (Animated) --- */
 .title-container { position: relative; width: 100%; text-align: center; z-index: 10; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s backwards; margin-bottom: 1vh; }
@@ -122,9 +126,10 @@ a:hover { text-decoration: underline; }
     text-shadow: none;
     border: 2px solid var(--wood-border); /* Wood border */
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Inner shadow */
-    margin-bottom: -1.5vh;
+    margin-bottom: -0.8vh;
     position: relative; z-index: 2;
     animation: titleItsBounce 1.5s ease-out 1s;
+    
 }
 .title-quiz-time {
     font-family: var(--title-font); /* Pirate Font */
@@ -184,7 +189,14 @@ a:hover { text-decoration: underline; }
 /* --- Focus Classes --- */
 .primary-focus { opacity: var(--primary-opacity); transform: scale(var(--primary-scale)); z-index: 6; animation: pulseFocus 2s infinite ease-in-out; box-shadow: 5px 5px 8px rgba(0,0,0,0.4), 0 0 15px rgba(255, 255, 255, 0.3); /* Muted glow */ }
 .secondary-focus { opacity: var(--secondary-opacity); transform: scale(var(--secondary-scale)); z-index: 5; animation: none; box-shadow: 5px 5px 8px rgba(0,0,0,0.4); }
-.countdown-finished { opacity: var(--finished-opacity); transform: scale(var(--secondary-scale)); animation: none; box-shadow: 3px 3px 5px rgba(0,0,0,0.3); /* Even less shadow */}
+.countdown-finished {
+    /* Base finished style (also used for stage 1) */
+    opacity: var(--finished-opacity);
+    transform: scale(var(--secondary-scale)); /* Same scale as secondary */
+    animation: none;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+}
+
 
 /* --- Countdown Title (Inside Section) --- */
 .countdown-title-themed {
@@ -246,10 +258,39 @@ a:hover { text-decoration: underline; }
 .live-message-themed {
     border-radius: 6px; border: 2px solid var(--outline-color); /* Match box style */
     padding: 1.5vh 2vw; display: flex; align-items: center; justify-content: center;
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.15); min-height: clamp(60px, 9vh, 80px); width: 95%; margin: 0 auto; font-family: var(--content-font); font-size: clamp(18px, 3vw, 24px); font-weight: 900; color: var(--text-color-light); text-align: center; animation: slideBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; background-image: linear-gradient(135deg, var(--correct-bg-color) 0%, var(--correct-bg-gradient-end) 100%);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.15); min-height: clamp(60px, 9vh, 80px); width: 95%; margin: 0 auto; font-family: var(--content-font); color: var(--text-color-light); text-align: center; animation: slideBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; background-image: linear-gradient(135deg, var(--correct-bg-color) 0%, var(--correct-bg-gradient-end) 100%);
     text-shadow: -1px -1px 0 var(--outline-color), 1px -1px 0 var(--outline-color), -1px 1px 0 var(--outline-color), 1px 1px 0 var(--outline-color);
+    line-height: 1.3;
+    /* Default styles for stage 1 */
+    font-size: var(--font-size-live-msg-stage1);
+    font-weight: 700; /* Bold for stage 1 */
 }
 .live-message-themed.error-message { background-image: none; background-color: var(--error-bg-color); }
+
+/* Class for finished stage 1 (clickable) */
+.countdown-section.stage-1 .live-message-themed {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, background-image 0.2s ease;
+}
+.countdown-section.stage-1 .live-message-themed:hover {
+    background-image: linear-gradient(135deg, #2ecc71 0%, #3fe080 100%); /* Brighter green on hover */
+}
+.countdown-section.stage-1 .live-message-themed:active {
+    transform: translateY(1px);
+}
+
+/* Class for finished stage 2 (after click) */
+.countdown-section.stage-2 .live-message-themed {
+    cursor: default; /* Not clickable anymore */
+    font-size: var(--font-size-live-msg-stage2); /* Slightly smaller text */
+    font-weight: 500; /* Normal weight */
+     background-image: none; /* Remove gradient */
+     background-color: var(--finished-stage2-bg); /* Greyed out */
+     border-color: var(--finished-stage2-border);
+     color: #ccc; /* Lighter grey text */
+     text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+}
+
 
 /* --- Crew Image --- */
 .crew-image-container { position: absolute; bottom: var(--bottom-bar-height); left: 0; width: 100%; height: var(--crew-image-height-vh); z-index: 3; overflow: hidden; mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%); pointer-events: none; }
@@ -280,6 +321,13 @@ a:hover { text-decoration: underline; }
 /* --- Discord Overlay Styling --- */
 #discord-overlay { position: absolute; inset: 0; background-color: rgba(15, 23, 32, 0.9); /* Dark blue overlay */ z-index: 20; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.9); pointer-events: none; transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
 #discord-overlay.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+/* Apply stage classes to overlay as well */
+#discord-overlay.stage-1 .overlay-content {
+    cursor: pointer; /* Clickable content area in stage 1 */
+}
+#discord-overlay.stage-2 .overlay-content {
+    cursor: default;
+}
 .overlay-content {
     background: var(--parchment-bg) url('images/parchment-texture.png') repeat; /* Parchment background + texture */
     padding: clamp(20px, 5vw, 50px);
@@ -338,7 +386,6 @@ a:hover { text-decoration: underline; }
 
 
 /* --- Media Queries --- */
-/* ... Keep existing media queries ... */
 @media (max-width: 900px) { .character-switcher { width: clamp(80px, 12vw, 150px); } .content-layer { width: calc(100% - (2 * clamp(80px, 12vw, 150px)) - 6vw); } }
 @media (max-width: 700px) { .countdown-title-themed { white-space: normal; justify-content: flex-start; } .countdown-sub-title { text-align: left; } }
 @media (max-width: 600px) { :root { --font-size-title-main: 40px; --font-size-countdown-title: 18px; --font-size-number: 22px; --crew-image-height-vh: 35vh; --bottom-bar-height: 6vh; --font-size-overlay-title: 28px; --font-size-overlay-text: 14px;} .countdown-area { width: 100%; gap: 1.5vh; } .countdown-boxes { gap: 8px; } .box { flex-basis: clamp(60px, 18vw, 75px); min-height: 55px; } .content-layer { width: 95%; padding-top: max(8vh, 60px); padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 1vh); } .logo-image { width: clamp(100px, 25vw, 150px); } .title-quiz-time { white-space: normal; } .bottom-discord-bar { font-size: 11px; } .overlay-button { padding: 10px 20px; } .character-switcher { display: none; } }

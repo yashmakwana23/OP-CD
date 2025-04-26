@@ -11,8 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Include Original Fonts + New Pirate Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;700;900&family=Pirata+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Pirata+One&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 
@@ -25,20 +24,19 @@
 
         <!-- Background Layer -->
         <div class="background-layer">
-             <!-- Optional: Replace grid with a subtle texture like wood or ocean -->
             <!-- <img src="images/dark-wood-bg.png" alt="Background Texture" class="background-img"> -->
-            <div class="overlay"></div> <!-- Keep overlay for darkening -->
+            <div class="overlay"></div>
         </div>
 
         <!-- Dropping Items Container -->
         <div id="dropping-items-container"></div>
 
-        <!-- Decorative Elements Layer (UPDATE IMAGE PATHS!) -->
+        <!-- Decorative Elements Layer -->
         <div class="decor-layer">
-             <img src="images/decor/skull.png" class="decor-item decor-1" alt=""> <!-- Example Path -->
-             <img src="images/decor/anchor.png" class="decor-item decor-2" alt=""> <!-- Example Path -->
-             <img src="images/decor/crossed-swords.png" class="decor-item decor-3" alt=""> <!-- Example Path -->
-             <img src="images/decor/compass-rose.png" class="decor-item decor-4" alt=""> <!-- Example Path -->
+             <img src="images/decor/skull.png" class="decor-item decor-1" alt="">
+             <img src="images/decor/anchor.png" class="decor-item decor-2" alt="">
+             <img src="images/decor/crossed-swords.png" class="decor-item decor-3" alt="">
+             <img src="images/decor/compass-rose.png" class="decor-item decor-4" alt="">
         </div>
 
          <!-- Logo -->
@@ -57,26 +55,27 @@
 
         <!-- Main Content Area -->
         <div class="content-layer">
-           <!-- ... (Rest of the content-layer HTML remains the same) ... -->
             <div class="title-container">
                  <span class="title-its">EPISODE</span>
                  <h1 class="title-quiz-time">COUNTDOWN</h1>
                  <span class="highlight-episode-themed">1126</span> <!-- Replace -->
             </div>
             <div class="countdown-area">
+                <!-- Raw Countdown -->
                 <div id="raw-countdown-section" class="countdown-section raw-theme">
                     <h2 class="countdown-title-themed raw-title">
                         <span class="countdown-logo"><img src="images/logos/fuji-tv.png" alt="Fuji TV"></span>
                         <span class="countdown-main-title">Fuji TV</span>
-                        <span class="countdown-sub-title">9:30 AM JST | Raw Episode</span>
+                        <span class="countdown-sub-title">Sunday 7:45 PM IST (Raw Episode)</span>
                     </h2>
                     <div class="countdown-boxes" id="raw-countdown-box"></div>
                 </div>
+                <!-- Sub Countdown -->
                 <div id="sub-countdown-section" class="countdown-section sub-theme">
                      <h2 class="countdown-title-themed sub-title">
                         <span class="countdown-logo"><img src="images/logos/crunchyroll.png" alt="Crunchyroll"></span>
                         <span class="countdown-main-title">Crunchyroll</span>
-                        <span class="countdown-sub-title">~11:00 AM JST | English Sub</span>
+                        <span class="countdown-sub-title">Sunday 9:15 PM IST (Sub Episode)</span>
                     </h2>
                     <div class="countdown-boxes" id="sub-countdown-box"></div>
                 </div>
@@ -93,15 +92,16 @@
 
         <!-- Bottom Discord Message Bar -->
          <div id="bottom-discord-message" class="bottom-discord-bar">
-              <span>Join Discord (Type !dc in chat) 👉 <a href="https://discord.gg/YOUR_SERVER" target="_blank">Click Here</a></span>
+              <span>Join our Discord community! Type <span class="highlight-command">!dc</span> in chat to stay updated on the latest episode and more!</span>
          </div>
 
          <!-- Discord Overlay (Initially Hidden) -->
-         <div id="discord-overlay">
+         <div id="discord-overlay"> <!-- Click listener will be added here -->
              <div class="overlay-content">
-                 <h2 class="overlay-title">Episodes Are Out!</h2>
-                 <p>Join the Discord server! Type <span class="highlight-command">!dc</span> in chat for the link, or click below.</p>
-                 <a href="https://discord.gg/YOUR_SERVER" target="_blank" class="overlay-button">Join Discord Now!</a>
+                 <h2 class="overlay-title">Episode's out!</h2>
+                 <!-- Initial Stage 1 Text -->
+                 <p id="overlay-message">Hang tight as we prepare everything. Join <b>Discord</b> for updates!</p>
+                 <a href="https://discord.gg/WHd5BgmpPs" target="_blank" class="overlay-button">Type <span class="highlight-command">!dc</span> in chat</a>
              </div>
          </div>
 
@@ -110,14 +110,16 @@
     <!-- particles.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-    <!-- Main JS (No changes needed from previous version) -->
+    <!-- Main JS -->
     <script>
+        // --- Timezone Helper & IST Calculation ---
+        function getNextISTDateTime(targetDayOfWeek, targetHour, targetMinute) {
+            const now = new Date(); const nowUTCYear = now.getUTCFullYear(); const nowUTCMonth = now.getUTCMonth(); const nowUTCDate = now.getUTCDate(); const nowUTCDay = now.getUTCDay(); const nowUTCHours = now.getUTCHours(); const nowUTCMinutes = now.getUTCMinutes(); let daysUntilTarget = targetDayOfWeek - nowUTCDay; if (daysUntilTarget < 0) { daysUntilTarget += 7; } const targetDateUTC = new Date(Date.UTC(nowUTCYear, nowUTCMonth, nowUTCDate + daysUntilTarget, 0, 0, 0, 0)); const targetHourUTC = targetHour - 5; const targetMinuteUTC = targetMinute - 30; let adjustedHourUTC = targetHourUTC; let adjustedMinuteUTC = targetMinuteUTC; if (adjustedMinuteUTC < 0) { adjustedMinuteUTC += 60; adjustedHourUTC -= 1; } if (adjustedHourUTC < 0) { adjustedHourUTC += 24; if (daysUntilTarget === 0) { const currentTotalUTCMinutes = nowUTCHours * 60 + nowUTCMinutes; const targetTotalUTCMinutes = adjustedHourUTC * 60 + adjustedMinuteUTC; if(currentTotalUTCMinutes > targetTotalUTCMinutes){ targetDateUTC.setUTCDate(targetDateUTC.getUTCDate() + 7); } } } else { if(daysUntilTarget === 0) { const currentTotalUTCMinutes = nowUTCHours * 60 + nowUTCMinutes; const targetTotalUTCMinutes = adjustedHourUTC * 60 + adjustedMinuteUTC; if(currentTotalUTCMinutes > targetTotalUTCMinutes){ targetDateUTC.setUTCDate(targetDateUTC.getUTCDate() + 7); } } } targetDateUTC.setUTCHours(adjustedHourUTC, adjustedMinuteUTC, 0, 0); console.log(`Target Day: ${targetDayOfWeek}, Target IST: ${targetHour}:${targetMinute}, Calculated Target UTC: ${targetDateUTC.toISOString()}`); return targetDateUTC;
+        }
+
         // --- Countdown Timer Setup ---
-        const nowMs = new Date().getTime();
-        const targetDateRaw = new Date(nowMs + 70 * 1000); // 7 seconds
-        const targetDateSub = new Date(nowMs + 140 * 1000); // 14 seconds
-        console.log("[Setup] Target Raw:", targetDateRaw.toLocaleTimeString());
-        console.log("[Setup] Target Sub:", targetDateSub.toLocaleTimeString());
+        const targetDateRaw = getNextISTDateTime(0, 19, 45); // Sunday 7:45 PM IST
+        const targetDateSub = getNextISTDateTime(0, 21, 15); // Sunday 9:15 PM IST
 
         // --- DOM Element References ---
         const rawCountdownSection = document.getElementById('raw-countdown-section');
@@ -127,6 +129,8 @@
         const bottomDiscordMessage = document.getElementById("bottom-discord-message");
         const fullscreenButton = document.getElementById("fullscreen-btn");
         const discordOverlay = document.getElementById('discord-overlay');
+        const overlayContent = discordOverlay.querySelector('.overlay-content'); // Target content for click
+        const overlayMessageP = document.getElementById('overlay-message'); // Target specific p tag
         const leftCharImg = document.getElementById('left-char-img');
         const rightCharImg = document.getElementById('right-char-img');
         const particlesContainer = document.getElementById('particles-js');
@@ -141,14 +145,53 @@
             <div class="box"><span class="number" id="{type}-seconds">??</span><span class="label">Secs</span></div>`;
 
         let countdownInterval = null;
-        let currentState = 0;
+        let currentState = 0; // 0: Init, 1: Both Pending, 2: Raw Live, 3: Both Live
+        let rawClickListener = null;
+        let subClickListener = null;
+        let overlayClickListener = null; // Listener for the overlay
 
         // --- Character Switcher & Dropping Items Image Setup ---
         const characterImages = [ /* ... Keep your list ... */
-
+            "images/items/ace.png",
+            "images/items/boa.png",
+            "images/items/brook.png",
+            "images/items/buddy.png",
+            "images/items/chopper.png",
+            "images/items/franky.png",
+            "images/items/kuma.png",
+            "images/items/luffy1.png",
+            "images/items/luffy2.png",
+            "images/items/luffy4.png",
+            "images/items/nam2.png",
+            "images/items/nami1.png",
+            "images/items/nami3.png",
+            "images/items/sanji.png",
+            "images/items/shanks.png",
+            "images/items/zimbe.png",
+            "images/items/mihawk.png",
+            "images/items/zoro1.png",
+            "images/items/zoro4.png",
         ];
         const droppingItemImages = [ /* ... Keep your list ... */
-            "images/items/10325-zoro-king.png", "images/items/in1.png","images/items/in2.png",
+            "images/items/ace.png",
+            "images/items/boa.png",
+            "images/items/brook.png",
+            "images/items/buddy.png",
+            "images/items/chopper.png",
+            "images/items/franky.png",
+            "images/items/kuma.png",
+            "images/items/luffy1.png",
+            "images/items/luffy2.png",
+            "images/items/luffy4.png",
+            "images/items/nam2.png",
+            "images/items/nami1.png",
+            "images/items/nami3.png",
+            "images/items/sanji.png",
+            "images/items/shanks.png",
+            "images/items/zimbe.png",
+            "images/items/mihawk.png",
+            "images/items/zoro1.png",
+            "images/items/zoro4.png",
         ];
 
         let leftCharIndex = -1;
@@ -157,30 +200,159 @@
         const switchIntervalTime = 7000;
         const dropIntervalTime = 1500;
 
-        // --- Functions (Keep existing: swapCharacter, startCharacterSwitcher, updateTimeElements, createLiveMessage, updateCountdown, launchFullscreen) ---
+
+        // --- Functions ---
         function swapCharacter(side) { /* ... Keep existing ... */
-            const imgElement = (side === 'left') ? leftCharImg : rightCharImg; if (!imgElement) return; let currentIndex = (side === 'left') ? leftCharIndex : rightCharIndex; let otherIndex = (side === 'left') ? rightCharIndex : leftCharIndex; let attempts = 0; do { currentIndex = (currentIndex + 1) % characterImages.length; attempts++; } while (characterImages.length > 1 && currentIndex === otherIndex && attempts < characterImages.length); const nextImageSrc = characterImages[currentIndex]; imgElement.classList.remove('visible'); setTimeout(() => { imgElement.src = nextImageSrc; imgElement.alt = nextImageSrc.split('/').pop().split('.')[0]; imgElement.onload = () => { imgElement.classList.add('visible'); if (side === 'left') { leftCharIndex = currentIndex; } else { rightCharIndex = currentIndex; } }; imgElement.onerror = () => { console.error(`Error loading image for ${side}: ${nextImageSrc}`); }; if (!imgElement.classList.contains('visible') && imgElement.complete) { imgElement.classList.add('visible'); } }, 500);
+             const imgElement = (side === 'left') ? leftCharImg : rightCharImg; if (!imgElement) return; let currentIndex = (side === 'left') ? leftCharIndex : rightCharIndex; let otherIndex = (side === 'left') ? rightCharIndex : leftCharIndex; let attempts = 0; do { currentIndex = (currentIndex + 1) % characterImages.length; attempts++; } while (characterImages.length > 1 && currentIndex === otherIndex && attempts < characterImages.length); const nextImageSrc = characterImages[currentIndex]; imgElement.classList.remove('visible'); setTimeout(() => { imgElement.src = nextImageSrc; imgElement.alt = nextImageSrc.split('/').pop().split('.')[0]; imgElement.onload = () => { imgElement.classList.add('visible'); if (side === 'left') { leftCharIndex = currentIndex; } else { rightCharIndex = currentIndex; } }; imgElement.onerror = () => { console.error(`Error loading image for ${side}: ${nextImageSrc}`); }; if (!imgElement.classList.contains('visible') && imgElement.complete) { imgElement.classList.add('visible'); } }, 500);
         }
         function startCharacterSwitcher() { /* ... Keep existing ... */
             if (characterImages.length === 0 || !leftCharImg || !rightCharImg) return; swapCharacter('left'); setTimeout(() => swapCharacter('right'), 1000); leftInterval = setInterval(() => swapCharacter('left'), switchIntervalTime); rightInterval = setInterval(() => swapCharacter('right'), switchIntervalTime); console.log("Character Switcher Started");
         }
         function updateTimeElements(elements, distance) { /* ... Keep existing ... */
-            if (!elements || !elements.days || !elements.hours || !elements.minutes || !elements.seconds) return; if (distance > 0) { elements.days.textContent = Math.floor(distance / (1000 * 60 * 60 * 24)); elements.hours.textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2,'0'); elements.minutes.textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2,'0'); elements.seconds.textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2,'0'); } else { elements.days.textContent = '0'; elements.hours.textContent = '00'; elements.minutes.textContent = '00'; elements.seconds.textContent = '00'; }
+             if (!elements || !elements.days || !elements.hours || !elements.minutes || !elements.seconds) return; if (distance > 0) { elements.days.textContent = Math.floor(distance / (1000 * 60 * 60 * 24)); elements.hours.textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2,'0'); elements.minutes.textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2,'0'); elements.seconds.textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2,'0'); } else { elements.days.textContent = '0'; elements.hours.textContent = '00'; elements.minutes.textContent = '00'; elements.seconds.textContent = '00'; }
         }
-        function createLiveMessage(type) { /* ... Keep existing ... */
-             const isRaw = type === 'raw'; const title = isRaw ? "RAW IS LIVE!" : "SUB IS LIVE!"; const messageClass = "live-message-themed"; return `<div class="${messageClass}">🏴‍☠️ ${title} 🏴‍☠️ Check Discord!</div>`; // Added pirate flags
+        function createStage1Message(type) {
+            const isRaw = type === 'raw';
+            const title = isRaw ? "Episode's out! Hang tight as we prep everything." : "SUB RELEASED!";
+            const messageClass = "live-message-themed";
+            return `<div class="${messageClass}" data-type="${type}"> ${title} </div>`;
         }
-        function updateCountdown() { /* ... Keep existing ... */
-             const currentTime = new Date().getTime(); const distanceRaw = targetDateRaw - currentTime; const distanceSub = targetDateSub - currentTime; const rawIsLive = distanceRaw <= 0; const subIsLive = distanceSub <= 0; let nextState = 0; if (!rawIsLive && !subIsLive) nextState = 1; else if (rawIsLive && !subIsLive) nextState = 2; else if (rawIsLive && subIsLive) nextState = 3; if (nextState !== currentState) { console.log(`State Change: ${currentState} -> ${nextState}`); rawCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished'); subCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished'); discordOverlay.classList.remove('show'); if (nextState === 1) { rawCountdownSection.classList.add('primary-focus'); subCountdownSection.classList.add('secondary-focus'); bottomDiscordMessage.classList.remove('highlight'); if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") }; timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; } else if (nextState === 2) { rawCountdownSection.classList.add('secondary-focus'); subCountdownSection.classList.add('primary-focus'); bottomDiscordMessage.classList.add('highlight'); if (!rawCountdownBox.querySelector('.live-message-themed')) rawCountdownBox.innerHTML = createLiveMessage('raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; } else if (nextState === 3) { rawCountdownSection.classList.add('secondary-focus', 'countdown-finished'); subCountdownSection.classList.add('secondary-focus', 'countdown-finished'); bottomDiscordMessage.classList.add('highlight'); if (!rawCountdownBox.querySelector('.live-message-themed')) rawCountdownBox.innerHTML = createLiveMessage('raw'); if (!subCountdownBox.querySelector('.live-message-themed')) subCountdownBox.innerHTML = createLiveMessage('sub'); discordOverlay.classList.add('show'); } currentState = nextState; } if (currentState === 1) { updateTimeElements(timeElements.raw, distanceRaw); updateTimeElements(timeElements.sub, distanceSub); } else if (currentState === 2) { updateTimeElements(timeElements.sub, distanceSub); } if (currentState === 3) { if (countdownInterval) { cancelAnimationFrame(countdownInterval); countdownInterval = null; console.log("Loop stopped."); clearInterval(dropInterval); console.log("Dropping items stopped.");} return; } if (countdownInterval !== null) { countdownInterval = requestAnimationFrame(updateCountdown); }
+
+        // Click handler for individual countdown boxes (Stage 1 -> Stage 2)
+        function handleFinishedCountdownClick(event) {
+            const targetDiv = event.currentTarget;
+            const liveMessageDiv = targetDiv.querySelector('.live-message-themed');
+            const type = liveMessageDiv?.dataset.type;
+            const section = targetDiv.closest('.countdown-section');
+            if (!type || !section || section.classList.contains('stage-2')) return;
+            console.log(`Handling Stage 1 click for: ${type}`);
+            liveMessageDiv.innerHTML = `Join Discord for Watch Party, Discussions & Episode links!`;
+            section.classList.remove('stage-1');
+            section.classList.add('stage-2');
+            // Remove the specific listener
+             if (type === 'raw' && rawClickListener) { targetDiv.removeEventListener('click', rawClickListener); rawClickListener = null; }
+             else if (type === 'sub' && subClickListener) { targetDiv.removeEventListener('click', subClickListener); subClickListener = null; }
         }
+
+        // Click handler for the overlay (Stage 1 -> Stage 2)
+        function handleOverlayClick() {
+             if (!discordOverlay.classList.contains('stage-1')) return; // Only act if in stage 1
+
+             console.log("Handling Overlay Stage 1 click");
+
+             // Update text
+             overlayMessageP.innerHTML = `Join Discord for Watch Party, discussions & <b>episode links</b>!`;
+             // Optional: Change button text?
+             // discordOverlay.querySelector('.overlay-button').textContent = "Join Discord";
+
+             // Change state
+             discordOverlay.classList.remove('stage-1');
+             discordOverlay.classList.add('stage-2');
+
+             // Remove this listener
+             if (overlayClickListener) {
+                 overlayContent.removeEventListener('click', overlayClickListener);
+                 overlayClickListener = null;
+                 console.log("Overlay click listener removed.");
+             }
+        }
+
+
+        function updateCountdown() {
+            const currentTime = new Date().getTime();
+            const distanceRaw = targetDateRaw.getTime() - currentTime;
+            const distanceSub = targetDateSub.getTime() - currentTime;
+            const rawIsLive = distanceRaw <= 0;
+            const subIsLive = distanceSub <= 0;
+
+            let nextState = 0;
+            if (!rawIsLive && !subIsLive) nextState = 1;
+            else if (rawIsLive && !subIsLive) nextState = 2;
+            else if (rawIsLive && subIsLive) nextState = 3;
+
+            if (nextState !== currentState) {
+                console.log(`State Change: ${currentState} -> ${nextState}`);
+                // --- Remove previous classes ---
+                rawCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished', 'stage-1', 'stage-2');
+                subCountdownSection.classList.remove('primary-focus', 'secondary-focus', 'countdown-finished', 'stage-1', 'stage-2');
+                discordOverlay.classList.remove('show', 'stage-1', 'stage-2'); // Reset overlay classes
+                 // Remove listeners if state changes away from stage 1/3
+                 if (rawClickListener) { rawCountdownBox.removeEventListener('click', rawClickListener); rawClickListener = null; }
+                 if (subClickListener) { subCountdownBox.removeEventListener('click', subClickListener); subClickListener = null; }
+                 if (overlayClickListener) { overlayContent.removeEventListener('click', overlayClickListener); overlayClickListener = null; }
+
+
+                // --- Apply new state ---
+                if (nextState === 1) { // Both Pending
+                    rawCountdownSection.classList.add('primary-focus');
+                    subCountdownSection.classList.add('secondary-focus');
+                    bottomDiscordMessage.classList.remove('highlight');
+                    if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw');
+                    if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub');
+                    timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") };
+                    timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") };
+                }
+                else if (nextState === 2) { // Raw Live (Stage 1), Sub Pending
+                    rawCountdownSection.classList.add('secondary-focus', 'countdown-finished', 'stage-1');
+                    subCountdownSection.classList.add('primary-focus');
+                    bottomDiscordMessage.classList.add('highlight');
+                    if (!rawCountdownBox.querySelector('.live-message-themed')) {
+                         rawCountdownBox.innerHTML = createStage1Message('raw');
+                         if (!rawClickListener) { rawClickListener = handleFinishedCountdownClick; rawCountdownBox.addEventListener('click', rawClickListener); }
+                    }
+                    if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub');
+                    timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") };
+                }
+                else if (nextState === 3) { // Both Live (Stage 1 initially for boxes AND overlay)
+                    rawCountdownSection.classList.add('secondary-focus', 'countdown-finished', 'stage-1');
+                    subCountdownSection.classList.add('secondary-focus', 'countdown-finished', 'stage-1');
+                    bottomDiscordMessage.classList.add('highlight');
+                    if (!rawCountdownBox.querySelector('.live-message-themed')) {
+                        rawCountdownBox.innerHTML = createStage1Message('raw');
+                        if (!rawClickListener) { rawClickListener = handleFinishedCountdownClick; rawCountdownBox.addEventListener('click', rawClickListener); }
+                    }
+                    if (!subCountdownBox.querySelector('.live-message-themed')) {
+                         subCountdownBox.innerHTML = createStage1Message('sub');
+                         if (!subClickListener) { subClickListener = handleFinishedCountdownClick; subCountdownBox.addEventListener('click', subClickListener); }
+                    }
+                    // Show overlay in stage 1
+                    discordOverlay.classList.add('show', 'stage-1');
+                     // Add overlay click listener
+                     if (!overlayClickListener) {
+                         overlayClickListener = handleOverlayClick;
+                         overlayContent.addEventListener('click', overlayClickListener); // Attach to content div
+                         console.log("Overlay click listener added.");
+                     }
+                }
+                currentState = nextState;
+            }
+
+            // Update countdown times if applicable
+            if (currentState === 1) {
+                updateTimeElements(timeElements.raw, distanceRaw);
+                updateTimeElements(timeElements.sub, distanceSub);
+            } else if (currentState === 2 && subCountdownBox.querySelector('.box')) {
+                updateTimeElements(timeElements.sub, distanceSub);
+            }
+
+            // Stop loop/intervals only when State 3 is definitively reached
+            if (currentState === 3) {
+                if (countdownInterval) { cancelAnimationFrame(countdownInterval); countdownInterval = null; console.log("Countdown loop stopped."); }
+                if (dropInterval) { clearInterval(dropInterval); dropInterval = null; console.log("Dropping items stopped."); }
+                return;
+            }
+            if (countdownInterval !== null) { countdownInterval = requestAnimationFrame(updateCountdown); }
+        }
+
+
         function launchFullscreen() { /* ... Keep existing ... */
              if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) { const docEl = document.documentElement; if (docEl.requestFullscreen) docEl.requestFullscreen(); else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen(); else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen(); else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); } else { if (document.exitFullscreen) document.exitFullscreen(); else if (document.msExitFullscreen) document.msExitFullscreen(); else if (document.mozCancelFullScreen) document.mozCancelFullScreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); }
         }
         function createDroppingItem() { /* ... Keep existing ... */
-            if (droppingItemImages.length === 0 || !droppingItemsContainer) return; const item = document.createElement('img'); const randomIndex = Math.floor(Math.random() * droppingItemImages.length); const randomX = Math.random() * 95; const randomDuration = Math.random() * 3 + 4; const randomDelay = Math.random() * 1; item.src = droppingItemImages[randomIndex]; item.alt = "dropping item"; item.classList.add('dropping-item'); item.style.left = `${randomX}%`; item.style.animationDuration = `${randomDuration}s`; item.style.animationDelay = `${randomDelay}s`; item.addEventListener('animationend', () => { item.remove(); }); droppingItemsContainer.appendChild(item);
+             if (droppingItemImages.length === 0 || !droppingItemsContainer) return; const item = document.createElement('img'); const randomIndex = Math.floor(Math.random() * droppingItemImages.length); const randomX = Math.random() * 95; const randomDuration = Math.random() * 3 + 4; const randomDelay = Math.random() * 1; item.src = droppingItemImages[randomIndex]; item.alt = "dropping item"; item.classList.add('dropping-item'); item.style.left = `${randomX}%`; item.style.animationDuration = `${randomDuration}s`; item.style.animationDelay = `${randomDelay}s`; item.addEventListener('animationend', () => { item.remove(); }); droppingItemsContainer.appendChild(item);
         }
-        function initializeCountdown() { /* ... Keep existing setup, particles init, and start logic ... */
-             console.log("DOM Loaded. Initializing countdown..."); const now = new Date().getTime(); if (!(targetDateRaw instanceof Date) || isNaN(targetDateRaw) || !(targetDateSub instanceof Date) || isNaN(targetDateSub)) { console.error("Initialization Error: Invalid target dates provided."); rawCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; subCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; return; } if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") }; timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; if(fullscreenButton) fullscreenButton.addEventListener('click', launchFullscreen); if (typeof particlesJS !== 'undefined') { particlesJS('particles-js', { /* ... Keep particle config ... */ "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true, "anim": { "enable": true, "speed": 0.4, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": false } }, "line_linked": { "enable": false }, "move": { "enable": true, "speed": 0.8, "direction": "bottom-left", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false } } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true } }, "retina_detect": true }); console.log("Particles Initialized."); } else { console.error("particles.js library not found."); } console.log("Starting countdown loop..."); currentState = 0; updateCountdown(); if (currentState !== 3) { countdownInterval = requestAnimationFrame(updateCountdown); } setTimeout(startCharacterSwitcher, 1500); if (droppingItemImages.length > 0) { dropInterval = setInterval(createDroppingItem, dropIntervalTime); console.log("Dropping items started."); } else { console.warn("No images defined for dropping items."); }
+        function initializeCountdown() { /* ... Keep existing setup ... */
+             console.log("DOM Loaded. Initializing countdown..."); const now = new Date().getTime(); if (!(targetDateRaw instanceof Date) || isNaN(targetDateRaw) || !(targetDateSub instanceof Date) || isNaN(targetDateSub)) { console.error("Initialization Error: Invalid target dates provided."); rawCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; subCountdownBox.innerHTML = `<div class="live-message-themed error-message">Error: Invalid Date</div>`; return; } if (!rawCountdownBox.querySelector('.box')) rawCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'raw'); if (!subCountdownBox.querySelector('.box')) subCountdownBox.innerHTML = initialCountdownHTML.replace(/{type}/g, 'sub'); timeElements.raw = { days: document.getElementById("raw-days"), hours: document.getElementById("raw-hours"), minutes: document.getElementById("raw-minutes"), seconds: document.getElementById("raw-seconds") }; timeElements.sub = { days: document.getElementById("sub-days"), hours: document.getElementById("sub-hours"), minutes: document.getElementById("sub-minutes"), seconds: document.getElementById("sub-seconds") }; if(fullscreenButton) fullscreenButton.addEventListener('click', launchFullscreen); if (typeof particlesJS !== 'undefined') { particlesJS('particles-js', { "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true, "anim": { "enable": true, "speed": 0.4, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": false } }, "line_linked": { "enable": false }, "move": { "enable": true, "speed": 0.8, "direction": "bottom-left", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false } } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true } }, "retina_detect": true }); console.log("Particles Initialized."); } else { console.error("particles.js library not found."); } console.log("Starting countdown loop..."); currentState = 0; updateCountdown(); if (currentState !== 3) { countdownInterval = requestAnimationFrame(updateCountdown); } setTimeout(startCharacterSwitcher, 1500); if (droppingItemImages.length > 0) { dropInterval = setInterval(createDroppingItem, dropIntervalTime); console.log("Dropping items started."); } else { console.warn("No images defined for dropping items."); }
         }
         document.addEventListener('DOMContentLoaded', initializeCountdown);
     </script>
