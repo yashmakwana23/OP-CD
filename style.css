@@ -1,0 +1,435 @@
+/* --- Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Pirata+One&display=swap'); /* Changed Bangers to Pirata One */
+
+/* --- Variables --- */
+:root {
+    /* Base Colors - Darker, Pirate Theme */
+    --bg-color: #1a2533; /* Dark blue/grey */
+    --bg-gradient: linear-gradient(180deg, #1a2533 0%, #0f1720 100%); /* Dark gradient */
+    --text-color-light: #e0e0e0; /* Off-white for text */
+    --text-color-dark: #2c3e50; /* Darker grey-blue for text on light */
+    --outline-color: #000000; /* Black outline */
+    --dark-grey-outline: #222; /* Very dark grey outline */
+    --correct-bg-color: #27ae60; /* Muted Green */
+    --correct-bg-gradient-end: #2ecc71;
+    --error-bg-color: #c0392b; /* Muted Red */
+
+    /* Raw Theme Colors - Fire/Action Red */
+    --raw-color: #e74c3c; /* Strong Red */
+    --raw-gradient-end: #c0392b; /* Darker Red */
+    --raw-title-color: var(--raw-color);
+    --raw-text-color: var(--text-color-light);
+    --raw-outline-color: var(--outline-color);
+    --raw-color-rgb: 231, 76, 60;
+
+    /* Sub Theme Colors - Gold/Bronze Treasure */
+    --sub-color: #d4ac0d; /* Bronze/Gold */
+    --sub-gradient-end: #b8860b; /* Darker Gold */
+    --sub-title-color: var(--sub-color);
+    --sub-text-color: var(--text-color-light); /* LIGHT text on gold boxes */
+    --sub-outline-color: var(--outline-color);
+    --sub-color-rgb: 212, 172, 13;
+
+    /* Other UI Colors */
+    --parchment-bg: #f5e8c8; /* Parchment for countdown containers */
+    --wood-border: #6f4f28; /* Wood color for borders */
+    --button-text-color: var(--text-color-dark); /* Dark text for buttons */
+    --finished-stage2-bg: #7f8c8d; /* Grey for stage 2 finished */
+    --finished-stage2-border: #596163; /* Darker grey border */
+
+
+    /* Focus Control */
+    --primary-opacity: 1.0;
+    --secondary-opacity: 0.6; /* Slightly less fade */
+    --primary-scale: 1.0;
+    --secondary-scale: 0.8; /* Slightly less shrink */
+    --finished-opacity: 0.5; /* Opacity for stage 1 finished */
+
+    /* Fonts */
+    --title-font: "Pirata One", cursive; /* NEW Pirate Font */
+    --content-font: "Poppins", sans-serif; /* Keep Poppins for readability */
+
+    /* Responsive Font Sizes */
+    --font-size-top-bar: clamp(12px, 1.8vh, 16px);
+    --font-size-title-main: clamp(50px, 8vh, 90px); /* Larger main title */
+    --font-size-title-sub: clamp(30px, 5vh, 55px);
+    --font-size-title-its: clamp(30px, 5vh, 55px);
+    --font-size-cd-title-main: clamp(16px, 2.5vh, 22px); /* Adjusted */
+    --font-size-cd-title-sub: clamp(11px, 1.7vh, 14px);
+    --font-size-number: clamp(26px, 4vh, 36px);
+    --font-size-label: clamp(10px, 1.6vh, 13px);
+    --font-size-overlay-title: clamp(35px, 6vh, 55px); /* Larger overlay title */
+    --font-size-overlay-text: clamp(16px, 2.5vh, 22px);
+    --font-size-live-msg-stage1: clamp(16px, 2.5vw, 20px);
+    --font-size-live-msg-stage2: clamp(14px, 2.2vw, 18px);
+
+    /* Layout */
+    --crew-image-height-vh: 40vh;
+    --bottom-bar-height: 5vh;
+    --char-switcher-width: clamp(100px, 15vw, 200px);
+    --logo-height: clamp(18px, 3vh, 26px);
+    --dropping-item-size: clamp(30px, 5vw, 60px);
+}
+
+/* --- Base & Reset --- */
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; font-family: var(--content-font); background: var(--bg-gradient); /* Apply gradient */ color: var(--text-color-light); overflow: hidden; }
+* { box-sizing: border-box; }
+button { border: none; background: none; padding: 0; margin: 0; font-family: inherit; cursor: pointer; outline: none; }
+a { color: var(--sub-color); /* Use gold for links */ text-decoration: none; font-weight: bold; }
+a:hover { text-decoration: underline; }
+
+/* --- Main Container --- */
+.quiz-container { position: relative; width: 100%; height: 100%; /* Removed bg-color */ overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+
+/* --- Particle Background --- */
+#particles-js { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+
+/* --- Background Layer --- */
+.background-layer { position: absolute; inset: 0; z-index: 2; }
+.background-img { /* Hide default grid, use CSS gradient or add texture here */ display: none; }
+.overlay { position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.3); /* Slightly darker overlay */ z-index: 2; }
+
+/* --- Dropping Items Container --- */
+#dropping-items-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 3; pointer-events: none; }
+.dropping-item { position: absolute; top: -100px; width: var(--dropping-item-size); height: auto; object-fit: contain; opacity: 0.8; will-change: transform, opacity; animation-name: fall; animation-timing-function: linear; animation-fill-mode: forwards; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5)); }
+
+/* --- Decorative Elements Layer --- */
+.decor-layer { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+
+/* --- Logo (Animated) --- */
+.logo-container { position: absolute; top: 2vh; left: 3vw; z-index: 11; filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.5)); /* Darker shadow */ animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s backwards, floatGentle 5s ease-in-out infinite alternate 1s; }
+.logo-image { width: clamp(120px, 14vw, 200px); height: auto; object-fit: contain; }
+
+/* --- Character Switchers --- */
+.character-switcher { position: absolute; top: 50%; opacity: 0; width: var(--char-switcher-width); height: auto; max-height: 40vh; z-index: 4; filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.6)); animation: floatGentle 6s ease-in-out infinite alternate; }
+#left-character-switcher { left: 2vw; transform: translate(-150%, -50%); animation-name: slideInLeft, floatGentle; animation-duration: 0.8s, 6s; animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94), ease-in-out; animation-delay: 1.5s, 2.3s; animation-iteration-count: 1, infinite; animation-direction: normal, alternate; animation-fill-mode: forwards, none; }
+#right-character-switcher { right: 2vw; transform: translate(150%, -50%); animation-name: slideInRight, floatGentle; animation-duration: 0.8s, 6s; animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94), ease-in-out; animation-delay: 1.7s, 2.5s; animation-iteration-count: 1, infinite; animation-direction: normal, alternate-reverse; animation-fill-mode: forwards, none; }
+.character-switcher img { display: block; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.5s ease-in-out; transform: scale(1); }
+.character-switcher img.visible { opacity: 1; animation: characterPop 0.6s ease-out forwards; }
+
+/* --- Main Content Area --- */
+.content-layer { 
+    position: relative; 
+    z-index: 5; 
+    padding: 1vh 3vw;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start; 
+    gap: 1.5vh; /* Reduced gap */
+    width: calc(100% - (2 * var(--char-switcher-width)) - 8vw); 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding-top: max(3vh, 25px); /* Reduced top padding further */
+    padding-bottom: calc(var(--crew-image-height-vh) + var(--bottom-bar-height) + 2vh);
+}
+
+/* --- Title (Animated) --- */
+.title-container { 
+    position: relative; 
+    width: 100%; 
+    text-align: center; 
+    z-index: 10; 
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s backwards; 
+    margin-top: -1vh; /* Added negative margin to move up */
+    margin-bottom: 0.3vh; /* Reduced bottom margin */
+}
+/* Updated "EPISODE" Box Theme */
+.title-its {
+    display: inline-block;
+    font-family: var(--title-font);
+    font-size: var(--font-size-title-its);
+    font-weight: normal; /* Use normal weight for Pirata One */
+    background-color: var(--parchment-bg); /* Parchment */
+    color: var(--text-color-dark); /* Dark text */
+    padding: 0.5vh 1.5vw;
+    border-radius: 5px; /* Less rounded */
+    text-shadow: none;
+    border: 2px solid var(--wood-border); /* Wood border */
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Inner shadow */
+    margin-bottom: -1vh; /* Increased negative margin */
+    position: relative; z-index: 2;
+    animation: titleItsBounce 1.5s ease-out 1s;
+    
+}
+.title-quiz-time {
+    font-family: var(--title-font); /* Pirate Font */
+    font-size: var(--font-size-title-main);
+    font-weight: normal; /* Use normal weight for Pirata One */
+    color: var(--text-color-light);
+    line-height: 1;
+    /* Sharper outline */
+    text-shadow: -2px -2px 0 var(--outline-color), 2px -2px 0 var(--outline-color), -2px 2px 0 var(--outline-color), 2px 2px 0 var(--outline-color),
+                 -3px 3px 0 var(--outline-color), 3px 3px 0 var(--outline-color), 4px 4px 5px rgba(0,0,0,0.5); /* Added thicker shadow */
+    position: relative; z-index: 1; margin: 0; white-space: nowrap;
+    animation: slightScale 10s ease-in-out infinite alternate 1s;
+}
+.highlight-episode-themed {
+    font-family: var(--title-font);
+    font-size: var(--font-size-title-sub);
+    color: var(--raw-color); /* Use action red */
+    text-shadow: -1px -1px 0 var(--outline-color), 1px -1px 0 var(--outline-color), -1px 1px 0 var(--outline-color), 1px 1px 0 var(--outline-color);
+    display: block; margin-top: -0.5vh;
+}
+
+/* --- Countdown Area --- */
+.countdown-area { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 1.5vh; /* Reduced gap */
+    width: 100%; 
+    margin-top: 1vh; /* Added small margin top */
+}
+
+/* --- Countdown Section --- */
+.countdown-section {
+    width: 100%;
+    background-color: var(--parchment-bg); /* Parchment background */
+    border-radius: 10px; /* Sharper corners */
+    border-width: 3px; /* Thinner border */
+    border-style: solid;
+    border-color: var(--wood-border); /* Default wood border */
+    box-shadow: 5px 5px 8px rgba(0,0,0,0.4); /* Darker shadow */
+    padding: 1.5vh 2vw;
+    position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease-out, border-color 0.3s ease-out; /* Added border transition */
+    transform-origin: center center; opacity: 0;
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+#raw-countdown-section { animation-delay: 0.6s; }
+#sub-countdown-section { animation-delay: 0.75s; }
+
+/* --- Theme Classes --- */
+.raw-theme { border-color: var(--raw-color); } /* Red border */
+.sub-theme { border-color: var(--sub-color); } /* Gold border */
+
+/* Raw Theme Box/Text Colors */
+.raw-theme .box { background-image: linear-gradient(135deg, var(--raw-color) 0%, var(--raw-gradient-end) 100%); border-color: var(--raw-outline-color); }
+.raw-theme .number, .raw-theme .label { color: var(--raw-text-color); text-shadow: -1px -1px 0 var(--dark-grey-outline), 1px -1px 0 var(--dark-grey-outline), -1px 1px 0 var(--dark-grey-outline), 1px 1px 0 var(--dark-grey-outline); } /* Slightly thinner shadow */
+
+/* Sub Theme Box/Text Colors */
+.sub-theme .box { background-image: linear-gradient(135deg, var(--sub-color) 0%, var(--sub-gradient-end) 100%); border-color: var(--sub-outline-color); }
+/* LIGHT text on gold */
+.sub-theme .number, .sub-theme .label { color: var(--text-color-light); text-shadow: 1px 1px 1px rgba(0,0,0,0.4); } /* Darker shadow for contrast */
+
+
+/* --- Focus Classes --- */
+.primary-focus { opacity: var(--primary-opacity); transform: scale(var(--primary-scale)); z-index: 6; animation: pulseFocus 2s infinite ease-in-out; box-shadow: 5px 5px 8px rgba(0,0,0,0.4), 0 0 15px rgba(255, 255, 255, 0.3); /* Muted glow */ }
+.secondary-focus { opacity: var(--secondary-opacity); transform: scale(var(--secondary-scale)); z-index: 5; animation: none; box-shadow: 5px 5px 8px rgba(0,0,0,0.4); }
+.countdown-finished {
+    /* Base finished style (also used for stage 1) */
+    opacity: var(--finished-opacity);
+    transform: scale(var(--secondary-scale)); /* Same scale as secondary */
+    animation: none;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+}
+
+
+/* --- Countdown Title (Inside Section) --- */
+.countdown-title-themed {
+    font-family: var(--content-font);
+    margin-bottom: 1.5vh; width: 100%;
+    border-bottom: 2px solid rgba(var(--wood-border), 0.5); /* Wood color dashed */
+    padding-bottom: 1vh; display: flex; align-items: center; justify-content: center;
+    gap: 8px; line-height: 1.2; overflow: hidden; white-space: nowrap;
+}
+.countdown-logo { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5)); /* Shadow on logo */}
+.countdown-logo img { height: var(--logo-height); width: auto; vertical-align: middle; object-fit: contain; }
+
+.countdown-main-title {
+    font-family: var(--title-font); /* Pirate Font */
+    font-size: var(--font-size-cd-title-main);
+    font-weight: normal; /* Normal for Pirata One */
+    flex-shrink: 0; margin: 0 4px; white-space: nowrap;
+    letter-spacing: 1px; /* Add letter spacing */
+}
+/* Use themed text colors */
+.raw-title .countdown-main-title { color: var(--raw-color); text-shadow: 1px 1px 0 var(--dark-grey-outline); }
+.sub-title .countdown-main-title { color: var(--sub-color); text-shadow: 1px 1px 0 var(--outline-color); }
+
+.countdown-sub-title {
+    font-size: var(--font-size-cd-title-sub);
+    font-weight: normal; opacity: 0.9; color: var(--text-color-dark); /* Dark text on parchment */
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+
+/* --- Countdown Boxes Container --- */
+.countdown-boxes { display: flex; gap: clamp(10px, 1.5vw, 15px); justify-content: center; width: 100%; flex-wrap: wrap; min-height: clamp(60px, 9vh, 80px); align-items: center; }
+
+/* --- Individual Countdown Box --- */
+.box {
+    border-radius: 6px; /* Sharper corners */
+    border-width: 2px; /* Thinner */
+    border-style: solid; padding: 1vh 1vw; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2); /* Reduced shadow */
+    flex: 1 1 clamp(65px, 10vw, 85px); min-height: clamp(60px, 9vh, 80px); text-align: center;
+    transition: opacity 0.5s ease-out; /* Only transition opacity now */
+    opacity: 0; transform: scale(0.5); /* Start state for popIn */
+    animation: popInBox 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.countdown-boxes .box:nth-child(1) { animation-delay: 0.9s; }
+.countdown-boxes .box:nth-child(2) { animation-delay: 1.0s; }
+.countdown-boxes .box:nth-child(3) { animation-delay: 1.1s; }
+.countdown-boxes .box:nth-child(4) { animation-delay: 1.2s; }
+/* Remove box hover animation */
+.box:active { transform: translateY(1px); box-shadow: 1px 1px 0px rgba(0,0,0,0.2); }
+
+/* --- Number Styling --- */
+.number { font-family: var(--content-font); font-size: var(--font-size-number); font-weight: 900; line-height: 1.1; }
+
+/* --- Label Styling --- */
+.label { font-family: var(--content-font); font-size: var(--font-size-label); font-weight: 700; margin-top: 0.3vh; line-height: 1; text-transform: uppercase; /* UPPERCASE Labels */}
+
+/* --- Live/Error Message Styling --- */
+.live-message-themed {
+    border-radius: 6px; border: 2px solid var(--outline-color); /* Match box style */
+    padding: 1.5vh 2vw; display: flex; align-items: center; justify-content: center;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.15); min-height: clamp(60px, 9vh, 80px); width: 95%; margin: 0 auto; font-family: var(--content-font); color: var(--text-color-light); text-align: center; animation: slideBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; background-image: linear-gradient(135deg, var(--correct-bg-color) 0%, var(--correct-bg-gradient-end) 100%);
+    text-shadow: -1px -1px 0 var(--outline-color), 1px -1px 0 var(--outline-color), -1px 1px 0 var(--outline-color), 1px 1px 0 var(--outline-color);
+    line-height: 1.3;
+    /* Default styles for stage 1 */
+    font-size: var(--font-size-live-msg-stage1);
+    font-weight: 700; /* Bold for stage 1 */
+}
+.live-message-themed.error-message { background-image: none; background-color: var(--error-bg-color); }
+
+/* Class for finished stage 1 (clickable) */
+.countdown-section.stage-1 .live-message-themed {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, background-image 0.2s ease;
+}
+.countdown-section.stage-1 .live-message-themed:hover {
+    background-image: linear-gradient(135deg, #2ecc71 0%, #3fe080 100%); /* Brighter green on hover */
+}
+.countdown-section.stage-1 .live-message-themed:active {
+    transform: translateY(1px);
+}
+
+/* Class for finished stage 2 (after click) */
+.countdown-section.stage-2 .live-message-themed {
+    cursor: default; /* Not clickable anymore */
+    font-size: var(--font-size-live-msg-stage2); /* Slightly smaller text */
+    font-weight: 500; /* Normal weight */
+     background-image: none; /* Remove gradient */
+     background-color: var(--finished-stage2-bg); /* Greyed out */
+     border-color: var(--finished-stage2-border);
+     color: #ccc; /* Lighter grey text */
+     text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+}
+
+
+/* --- Crew Image --- */
+.crew-image-container { position: absolute; bottom: var(--bottom-bar-height); left: 0; width: 100%; height: var(--crew-image-height-vh); z-index: 3; overflow: hidden; mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%); pointer-events: none; }
+.crew-image { display: block; position: absolute; bottom: -5%; left: 50%; transform: translateX(-50%); width: clamp(90%, 110vw, 1500px); max-width: 1500px; height: auto; max-height: 105%; object-fit: contain; object-position: center bottom; opacity: 0; animation: fadeIn 1.5s ease-out 0.5s forwards, crewFloatEnhanced 8s ease-in-out infinite alternate 2s; }
+
+/* --- Decorative Elements (Animated) --- */
+/* Adjust positions/sizes as needed for your NEW pirate images */
+.decor-item { position: absolute; opacity: 0; width: clamp(40px, 10vw, 120px); /* Slightly larger default */ height: auto; animation: popIn 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.5));}
+.decor-1 { /* Example: Skull */ top: 15vh; left: 75vw; transform: rotate(10deg); animation-name: popIn, floatWiggle; animation-duration: 0.9s, 6s; animation-delay: 1.0s, 1.9s; }
+.decor-2 { /* Example: Anchor */ top: 30vh; left: 8vw; transform: rotate(-5deg); animation-name: popIn, sway; animation-duration: 0.9s, 7s; animation-delay: 1.1s, 2.0s; }
+.decor-3 { /* Example: Swords */ top: 80vh; left: 12vw; transform: rotate(5deg); animation-name: popIn, slightScale; animation-duration: 0.9s, 4s; animation-delay: 1.2s, 2.1s; }
+.decor-4 { /* Example: Compass */ top: 75vh; right: 10vw; transform: rotate(0deg); animation-name: popIn, rotateElement; animation-duration: 0.9s, 10s; animation-delay: 1.3s, 2.2s; }
+/* Ensure shared properties are set correctly */
+.decor-1, .decor-2, .decor-3, .decor-4 { animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275), ease-in-out; animation-fill-mode: forwards, none; animation-iteration-count: 1, infinite; animation-direction: normal, alternate; }
+.decor-3 { animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275), ease-in-out; } /* slightScale needs ease */
+.decor-4 { animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275), linear; } /* rotate needs linear */
+
+
+/* --- Fullscreen Button --- */
+.fullscreen-button { position: absolute; top: 2vh; right: 2vw; z-index: 13; padding: 0.8vh 1.2vw; background: rgba(0,0,0,0.5); /* Darker */ color: var(--text-color-light); border-radius: 5px; font-size: clamp(10px, 1.5vw, 12px); cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.4); font-family: var(--content-font); font-weight: bold; transition: background-color 0.2s ease-out, transform 0.2s ease-out; }
+.fullscreen-button:hover { background: rgba(0,0,0,0.8); transform: scale(1.05); }
+
+/* --- Bottom Discord Bar --- */
+.bottom-discord-bar { position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.7); /* Darker */ color: var(--text-color-light); border-top: 2px solid var(--wood-border); /* Wood border */ padding: 0.8vh 2vw; font-size: var(--font-size-top-bar); font-weight: 400; text-align: center; z-index: 12; text-shadow: 1px 1px 1px rgba(0,0,0,0.7); transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out; min-height: var(--bottom-bar-height); display: flex; align-items: center; justify-content: center; }
+.bottom-discord-bar a { color: var(--sub-color); margin-left: 5px; }
+.bottom-discord-bar.highlight { background-color: rgba(var(--raw-color-rgb), 0.6); /* Use Raw red */ box-shadow: 0 0 10px rgba(var(--raw-color-rgb), 0.4); border-top-color: var(--raw-color); }
+
+/* --- Discord Overlay Styling --- */
+#discord-overlay { position: absolute; inset: 0; background-color: rgba(15, 23, 32, 0.9); /* Dark blue overlay */ z-index: 20; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.9); pointer-events: none; transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+#discord-overlay.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+/* Apply stage classes to overlay as well */
+#discord-overlay.stage-1 .overlay-content {
+    cursor: pointer; /* Clickable content area in stage 1 */
+}
+#discord-overlay.stage-2 .overlay-content {
+    cursor: default;
+}
+.overlay-content {
+    background: var(--parchment-bg) url('images/parchment-texture.png') repeat; /* Parchment background + texture */
+    padding: clamp(20px, 5vw, 50px);
+    border-radius: 8px; /* Sharper */
+    border: 4px solid var(--wood-border); /* Wood border */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: center; max-width: 90%; width: 500px;
+    color: var(--text-color-dark); /* Dark text on parchment */
+    transform: translateY(-20px); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+}
+#discord-overlay.show .overlay-content { transform: translateY(0); }
+.overlay-title {
+    font-family: var(--title-font); /* Pirate Font */
+    font-size: var(--font-size-overlay-title);
+    color: var(--raw-color); /* Red */
+    text-shadow: -1px -1px 0 var(--outline-color), 1px -1px 0 var(--outline-color), -1px 1px 0 var(--outline-color), 1px 1px 0 var(--outline-color);
+    margin-bottom: 15px; line-height: 1.1; letter-spacing: 1px;
+}
+.overlay-content p { font-size: var(--font-size-overlay-text); margin-bottom: 25px; color: var(--text-color-dark); font-weight: 500; }
+.highlight-command { font-weight: bold; color: var(--raw-color); background-color: rgba(0,0,0,0.1); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--raw-color); display: inline-block; }
+.overlay-button {
+    display: inline-block; padding: 12px 30px; font-size: clamp(16px, 2.5vh, 20px); font-weight: bold;
+    color: var(--button-text-color);
+    background: var(--sub-color); /* Gold */
+    border: 3px solid var(--outline-color);
+    border-radius: 8px; /* Sharper */
+    text-decoration: none; text-shadow: none;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.3); transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background-color 0.2s;
+    animation: pulseButton 2s infinite ease-in-out 1s;
+    font-family: var(--content-font); /* Use content font for button */
+}
+.overlay-button:hover { background-color: var(--sub-gradient-end); transform: translateY(-2px); box-shadow: 5px 5px 0px rgba(0,0,0,0.3); animation-play-state: paused; }
+.overlay-button:active { transform: translateY(1px); box-shadow: 1px 1px 0px rgba(0,0,0,0.3); }
+
+/* --- Animation Keyframes --- */
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.6); } 80% { opacity: 1; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 0.9; } }
+@keyframes pulseFocus { 0% { transform: scale(var(--primary-scale)); } 50% { transform: scale(calc(var(--primary-scale) * 1.02)); } 100% { transform: scale(var(--primary-scale)); } }
+@keyframes popInBox { 0% { opacity: 0; transform: scale(0.5) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0px); } }
+@keyframes titleItsBounce { 0% { transform: translateY(-50px) scale(0.8); opacity: 0; } 60% { transform: translateY(5px) scale(1.05); opacity: 1; } 80% { transform: translateY(-2px) scale(0.98); } 100% { transform: translateY(0px) scale(1); opacity: 1; } }
+@keyframes characterPop { 0% { transform: scale(0.8); } 80% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes floatGentle { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+@keyframes sway { 0% { transform: translateY(-50%) rotate(-2deg); } 100% { transform: translateY(-50%) rotate(2deg); } }
+@keyframes bgZoomPan { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.05) translate(2%, -1%); } }
+@keyframes floatWiggle { 0% { transform: translateY(0px) rotate(-15deg); } 25% { transform: translateY(-10px) rotate(-18deg); } 75% { transform: translateY(5px) rotate(-12deg); } 100% { transform: translateY(0px) rotate(-15deg); } }
+@keyframes rotateSlightlyEnhanced { 0% { transform: rotate(-110deg) scaleX(-1); } 50% { transform: rotate(-90deg) scaleX(-1); } 100% { transform: rotate(-110deg) scaleX(-1); } }
+@keyframes pulseDecorEnhanced { 0% { transform: scale(1) rotate(15deg); } 50% { transform: scale(1.15) rotate(18deg); } 100% { transform: scale(1) rotate(15deg); } }
+@keyframes bobEnhanced { 0% { transform: translateY(0px) rotate(10deg); } 50% { transform: translateY(-10px) rotate(8deg); } 100% { transform: translateY(0px) rotate(10deg); } }
+@keyframes crewFloatEnhanced { 0% { transform: translate(-50%, 0px) rotate(-0.5deg); } 50% { transform: translate(-50%, -10px) rotate(0.5deg); } 100% { transform: translate(-50%, 0px) rotate(-0.5deg); } }
+@keyframes slightScale { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
+@keyframes slideInLeft { from { opacity: 0; transform: translate(-150%, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
+@keyframes slideInRight { from { opacity: 0; transform: translate(150%, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
+@keyframes slideBounceIn { 0% { opacity: 0; transform: translateY(50px) scale(0.8); } 60% { opacity: 1; transform: translateY(-10px) scale(1.05); } 80% { transform: translateY(5px) scale(0.98); } 100% { transform: translateY(0px) scale(1); } }
+@keyframes pulseButton { 0% { box-shadow: 3px 3px 0px rgba(0,0,0,0.3), 0 0 0 0 rgba(var(--sub-color-rgb), 0.6); } 70% { box-shadow: 3px 3px 0px rgba(0,0,0,0.3), 0 0 0 10px rgba(var(--sub-color-rgb), 0); } 100% { box-shadow: 3px 3px 0px rgba(0,0,0,0.3), 0 0 0 0 rgba(var(--sub-color-rgb), 0); } }
+@keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } } /* Added more rotation */
+@keyframes rotateElement { /* New for compass */ 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } /* Simple rotation */
+
+
+/* --- Media Queries --- */
+@media (max-width: 900px) { .character-switcher { width: clamp(80px, 12vw, 150px); } .content-layer { width: calc(100% - (2 * clamp(80px, 12vw, 150px)) - 6vw); } }
+@media (max-width: 700px) { .countdown-title-themed { white-space: normal; justify-content: flex-start; } .countdown-sub-title { text-align: left; } }
+@media (max-width: 600px) { 
+    :root { --font-size-title-main: 40px; --font-size-countdown-title: 18px; --font-size-number: 22px; --crew-image-height-vh: 35vh; --bottom-bar-height: 6vh; --font-size-overlay-title: 28px; --font-size-overlay-text: 14px;} 
+    .countdown-area { width: 100%; gap: 1.5vh; } 
+    .countdown-boxes { gap: 8px; } 
+    .box { flex-basis: clamp(60px, 18vw, 75px); min-height: 55px; } 
+    .content-layer { 
+        padding-top: max(4vh, 30px); /* Further reduced for mobile */
+        width: 95%; 
+        gap: 1vh; /* Even smaller gap for mobile */
+    } 
+    .logo-image { width: clamp(100px, 25vw, 150px); } 
+    .title-quiz-time { white-space: normal; } 
+    .bottom-discord-bar { font-size: 11px; } 
+    .overlay-button { padding: 10px 20px; } 
+    .character-switcher { display: none; } 
+}
