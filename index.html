@@ -226,7 +226,7 @@
             const section = targetDiv.closest('.countdown-section');
             if (!type || !section || section.classList.contains('stage-2')) return;
             console.log(`Handling Stage 1 click for: ${type}`);
-            liveMessageDiv.innerHTML = `Join Discord for Watch Party, Discussions & Episode links!`;
+            liveMessageDiv.innerHTML = `Join Discord for Watch Party, Discussions & Updates!`;
             section.classList.remove('stage-1');
             section.classList.add('stage-2');
             // Remove the specific listener
@@ -241,7 +241,7 @@
              console.log("Handling Overlay Stage 1 click");
 
              // Update text
-             overlayMessageP.innerHTML = `Join Discord for Watch Party, discussions & <b>episode links</b>!`;
+             overlayMessageP.innerHTML = `Join Discord for Watch Party, discussions & <b>Updates</b>!`;
              // Optional: Change button text?
              // discordOverlay.querySelector('.overlay-button').textContent = "Join Discord";
 
